@@ -1,1 +1,111 @@
-<mxfile host="app.diagrams.net" modified="2021-02-16T18:41:33.377Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36" version="14.3.0" etag="12uC-rNfhjg7Vem2FpDs" type="github"><diagram id="Zdv1xs_29P3Mfl3cu5MO">UzV2zq1wL0osyPDNT0nNUTV2VTV2LsrPL4GwciucU3NyVI0MMlNUjV1UjYwMgFjVyA2HrCFY1qAgsSg1rwSLBiADYTaQg2Y1AA==</diagram></mxfile>
+<mxfile host="app.diagrams.net" modified="2021-02-16T18:41:57.222Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36" etag="tSMg0dw55j5nwqkEkJnJ" version="14.3.0" type="github">
+  <diagram id="Zdv1xs_29P3Mfl3cu5MO" name="UML">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="woczWqMUHimMObq-JOAm-1" value="UML" style="shape=umlFrame;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="352.5" y="20" width="465" height="570" as="geometry" />
+        </mxCell>
+        <mxCell id="woczWqMUHimMObq-JOAm-2" value="«actor»&lt;br&gt;&lt;b&gt;Base de Dados&amp;nbsp;&lt;br&gt;&lt;/b&gt;consumos de energia" style="html=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="160" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="woczWqMUHimMObq-JOAm-3" value="Redução de custos de&lt;br&gt;produção" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="620" y="50" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="woczWqMUHimMObq-JOAm-4" value="Manager" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="1">
+          <mxGeometry x="870" y="150" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="woczWqMUHimMObq-JOAm-5" value="" style="endArrow=none;html=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="860" y="180" as="sourcePoint" />
+            <mxPoint x="760" y="90" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="woczWqMUHimMObq-JOAm-6" value="Algoritmo Controlo&amp;nbsp;" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="515" y="160" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="woczWqMUHimMObq-JOAm-7" value="" style="endArrow=none;html=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="860" y="180" as="sourcePoint" />
+            <mxPoint x="655" y="190" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="woczWqMUHimMObq-JOAm-8" value="" style="endArrow=open;endFill=1;endSize=12;html=1;exitX=0.093;exitY=0.871;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.093;entryY=0.871;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="woczWqMUHimMObq-JOAm-6">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="500" y="280" as="sourcePoint" />
+            <mxPoint x="520" y="230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="woczWqMUHimMObq-JOAm-9" value="Sensores" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="435" y="270" width="80" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="woczWqMUHimMObq-JOAm-10" value="Atuadores" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="585" y="280" width="80" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="woczWqMUHimMObq-JOAm-11" value="" style="endArrow=open;endFill=1;endSize=12;html=1;" edge="1" parent="1">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="610" y="230" as="sourcePoint" />
+            <mxPoint x="630" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="woczWqMUHimMObq-JOAm-12" value="" style="endArrow=classic;startArrow=classic;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;" edge="1" parent="1" source="woczWqMUHimMObq-JOAm-2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="425" y="190" as="sourcePoint" />
+            <mxPoint x="515" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="woczWqMUHimMObq-JOAm-13" value="Production Diretor" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="1">
+          <mxGeometry x="260" y="414" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="woczWqMUHimMObq-JOAm-14" value="Manutenção" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="380" y="414" width="80" height="76" as="geometry" />
+        </mxCell>
+        <mxCell id="woczWqMUHimMObq-JOAm-15" value="" style="endArrow=none;html=1;exitX=-0.025;exitY=0.395;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="woczWqMUHimMObq-JOAm-14">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="370" y="443.5" as="sourcePoint" />
+            <mxPoint x="300" y="444" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="woczWqMUHimMObq-JOAm-16" value="«Include»" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="560" y="230" as="sourcePoint" />
+            <mxPoint x="560" y="476" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="woczWqMUHimMObq-JOAm-17" value="" style="endArrow=none;html=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="452.5" y="334" as="sourcePoint" />
+            <mxPoint x="420" y="414" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="woczWqMUHimMObq-JOAm-18" value="" style="endArrow=none;html=1;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="600" y="350" as="sourcePoint" />
+            <mxPoint x="470" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="woczWqMUHimMObq-JOAm-19" value="Autenticação" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="515" y="480" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="woczWqMUHimMObq-JOAm-20" value="«Include»" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="460" y="474" as="sourcePoint" />
+            <mxPoint x="510" y="524" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="woczWqMUHimMObq-JOAm-21" value="" style="endArrow=none;html=1;dashed=1;startArrow=open;startFill=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="655" y="510" as="sourcePoint" />
+            <mxPoint x="860" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="woczWqMUHimMObq-JOAm-22" value="«Include»" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="woczWqMUHimMObq-JOAm-21">
+          <mxGeometry x="-0.0968" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
