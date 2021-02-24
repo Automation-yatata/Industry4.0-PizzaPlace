@@ -1,89 +1,119 @@
-<mxfile host="app.diagrams.net" modified="2021-02-24T18:46:06.354Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36" etag="VK83Gg7S98s7P--OlNQ2" version="14.4.3" type="github">
-  <diagram id="O8cKu8hD9Wat7ur4KSWv" name="Page-1">
-    <mxGraphModel dx="1185" dy="635" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+<mxfile host="app.diagrams.net" modified="2021-02-24T18:55:52.608Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36" etag="aRcAC3braJCuE6Hn--uS" version="14.4.3" type="github">
+  <diagram id="O8cKu8hD9Wat7ur4KSWv" name="v1">
+    <mxGraphModel dx="1673" dy="896" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="HmkSvmM_FdpT99_8etO7-1" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="200" y="240" width="120" height="60" as="geometry" />
+          <mxGeometry x="257.5" y="340" width="130" height="60" as="geometry" />
         </mxCell>
         <mxCell id="HmkSvmM_FdpT99_8etO7-2" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="340" y="240" width="120" height="60" as="geometry" />
+          <mxGeometry x="387.5" y="340" width="140" height="60" as="geometry" />
         </mxCell>
         <mxCell id="HmkSvmM_FdpT99_8etO7-3" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="480" y="240" width="120" height="60" as="geometry" />
+          <mxGeometry x="527.5" y="340" width="140" height="60" as="geometry" />
         </mxCell>
         <mxCell id="HmkSvmM_FdpT99_8etO7-4" value="FORNO" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
-          <mxGeometry x="620" y="200" width="130" height="130" as="geometry" />
+          <mxGeometry x="687.5" y="300" width="130" height="130" as="geometry" />
         </mxCell>
         <mxCell id="HmkSvmM_FdpT99_8etO7-5" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#a0522d;strokeColor=#6D1F00;fontColor=#ffffff;" vertex="1" parent="1">
-          <mxGeometry x="810" y="241.25" width="47.5" height="47.5" as="geometry" />
+          <mxGeometry x="877.5" y="341.25" width="47.5" height="47.5" as="geometry" />
         </mxCell>
         <mxCell id="HmkSvmM_FdpT99_8etO7-6" value="Caixa da&amp;nbsp;&lt;br&gt;Pizza" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
-          <mxGeometry x="870" y="225" width="80" height="80" as="geometry" />
+          <mxGeometry x="937.5" y="325" width="80" height="80" as="geometry" />
         </mxCell>
         <mxCell id="HmkSvmM_FdpT99_8etO7-7" value="Jeremias" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
-          <mxGeometry x="760" y="212.5" width="40" height="85" as="geometry" />
+          <mxGeometry x="827.5" y="312.5" width="40" height="85" as="geometry" />
         </mxCell>
         <mxCell id="HmkSvmM_FdpT99_8etO7-12" value="" style="triangle;whiteSpace=wrap;html=1;direction=north;" vertex="1" parent="1">
-          <mxGeometry x="245" y="195" width="30" height="30" as="geometry" />
+          <mxGeometry x="312.5" y="295" width="30" height="30" as="geometry" />
         </mxCell>
         <mxCell id="HmkSvmM_FdpT99_8etO7-13" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
-          <mxGeometry x="245" y="165" width="30" height="30" as="geometry" />
+          <mxGeometry x="312.5" y="265" width="30" height="30" as="geometry" />
         </mxCell>
         <mxCell id="HmkSvmM_FdpT99_8etO7-14" value="" style="triangle;whiteSpace=wrap;html=1;direction=north;" vertex="1" parent="1">
-          <mxGeometry x="385" y="195" width="30" height="30" as="geometry" />
+          <mxGeometry x="452.5" y="295" width="30" height="30" as="geometry" />
         </mxCell>
         <mxCell id="HmkSvmM_FdpT99_8etO7-15" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
-          <mxGeometry x="385" y="165" width="30" height="30" as="geometry" />
+          <mxGeometry x="452.5" y="265" width="30" height="30" as="geometry" />
         </mxCell>
         <mxCell id="HmkSvmM_FdpT99_8etO7-16" value="Robot 1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="232.5" y="140" width="55" height="20" as="geometry" />
+          <mxGeometry x="300" y="240" width="55" height="20" as="geometry" />
         </mxCell>
         <mxCell id="HmkSvmM_FdpT99_8etO7-18" value="Robot 2" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="372.5" y="140" width="55" height="20" as="geometry" />
+          <mxGeometry x="440" y="240" width="55" height="20" as="geometry" />
         </mxCell>
         <mxCell id="HmkSvmM_FdpT99_8etO7-20" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#fad7ac;strokeColor=#b46504;" vertex="1" parent="1">
-          <mxGeometry x="585" y="246.25" width="47.5" height="47.5" as="geometry" />
+          <mxGeometry x="652.5" y="346.25" width="47.5" height="47.5" as="geometry" />
         </mxCell>
         <mxCell id="HmkSvmM_FdpT99_8etO7-21" value="" style="shape=actor;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="550" y="165" width="50" height="65" as="geometry" />
+          <mxGeometry x="617.5" y="265" width="50" height="65" as="geometry" />
         </mxCell>
         <mxCell id="HmkSvmM_FdpT99_8etO7-23" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
-          <mxGeometry x="300" y="246.25" width="47.5" height="47.5" as="geometry" />
+          <mxGeometry x="367.5" y="346.25" width="47.5" height="47.5" as="geometry" />
         </mxCell>
         <mxCell id="HmkSvmM_FdpT99_8etO7-24" value="Alfredo" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" vertex="1" parent="1">
-          <mxGeometry x="550" y="140" width="50" height="20" as="geometry" />
+          <mxGeometry x="617.5" y="240" width="50" height="20" as="geometry" />
         </mxCell>
         <mxCell id="HmkSvmM_FdpT99_8etO7-25" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x" vertex="1" parent="1">
-          <mxGeometry x="200" y="277.5" width="20" height="20" as="geometry" />
+          <mxGeometry x="267.5" y="377.5" width="20" height="20" as="geometry" />
         </mxCell>
         <mxCell id="HmkSvmM_FdpT99_8etO7-26" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x" vertex="1" parent="1">
-          <mxGeometry x="340" y="277.5" width="20" height="20" as="geometry" />
+          <mxGeometry x="407.5" y="377.5" width="20" height="20" as="geometry" />
         </mxCell>
         <mxCell id="HmkSvmM_FdpT99_8etO7-28" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x" vertex="1" parent="1">
-          <mxGeometry x="620" y="305" width="20" height="20" as="geometry" />
+          <mxGeometry x="687.5" y="405" width="20" height="20" as="geometry" />
         </mxCell>
         <mxCell id="HmkSvmM_FdpT99_8etO7-30" value="A/C - aquecer a sala&lt;br&gt;arrefecer a sala" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.patternFillRect;fillStyle=diagGrid;step=5;fillStrokeWidth=0.2;fillStrokeColor=#dddddd;" vertex="1" parent="1">
-          <mxGeometry x="370" y="20" width="120" height="60" as="geometry" />
+          <mxGeometry x="80" y="180" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="HmkSvmM_FdpT99_8etO7-29" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x;fillColor=#60a917;strokeColor=#2D7600;fontColor=#ffffff;" vertex="1" parent="1">
-          <mxGeometry x="372.5" y="60" width="20" height="20" as="geometry" />
+          <mxGeometry x="82.5" y="220" width="20" height="20" as="geometry" />
         </mxCell>
         <mxCell id="HmkSvmM_FdpT99_8etO7-22" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
-          <mxGeometry x="450" y="246.25" width="47.5" height="47.5" as="geometry" />
+          <mxGeometry x="517.5" y="346.25" width="47.5" height="47.5" as="geometry" />
         </mxCell>
         <mxCell id="HmkSvmM_FdpT99_8etO7-27" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x" vertex="1" parent="1">
-          <mxGeometry x="480" y="277.5" width="20" height="20" as="geometry" />
+          <mxGeometry x="547.5" y="377.5" width="20" height="20" as="geometry" />
         </mxCell>
         <mxCell id="HmkSvmM_FdpT99_8etO7-33" value="Controlador de Humidade&lt;br&gt;Aumenta ou diminui a humidade na cozinha" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.patternFillRect;fillStyle=diagGrid;step=5;fillStrokeWidth=0.2;fillStrokeColor=#dddddd;direction=south;" vertex="1" parent="1">
-          <mxGeometry x="803.75" y="10" width="60" height="120" as="geometry" />
+          <mxGeometry x="110" y="320" width="60" height="120" as="geometry" />
         </mxCell>
         <mxCell id="HmkSvmM_FdpT99_8etO7-34" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x;fillColor=#60a917;strokeColor=#2D7600;fontColor=#ffffff;" vertex="1" parent="1">
-          <mxGeometry x="803.75" y="110" width="20" height="20" as="geometry" />
+          <mxGeometry x="110" y="420" width="20" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-35" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x" vertex="1" parent="1">
-          <mxGeometry x="730" y="305" width="20" height="20" as="geometry" />
+        <mxCell id="HmkSvmM_FdpT99_8etO7-35" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x;fillColor=#60a917;strokeColor=#2D7600;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="797.5" y="405" width="20" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="HmkSvmM_FdpT99_8etO7-36" value="Coloca a&amp;nbsp;&lt;br&gt;massa no&lt;br&gt;tapete" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" vertex="1" parent="1">
+          <mxGeometry x="345" y="262.5" width="70" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="HmkSvmM_FdpT99_8etO7-37" value="Deita e espalha&lt;br&gt;o molho de tomate" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" vertex="1" parent="1">
+          <mxGeometry x="477.5" y="265" width="110" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="HmkSvmM_FdpT99_8etO7-38" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.sun;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="100" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="HmkSvmM_FdpT99_8etO7-39" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x;fillColor=#60a917;strokeColor=#2D7600;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="130" y="40" width="20" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="HmkSvmM_FdpT99_8etO7-40" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x" vertex="1" parent="1">
+          <mxGeometry x="257.5" y="80" width="70" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="HmkSvmM_FdpT99_8etO7-41" value="&lt;font style=&quot;font-size: 13px&quot;&gt;&lt;b&gt;Sensor Ambiente&lt;/b&gt;&lt;br&gt;&amp;nbsp;Temperatura&lt;br&gt;Humidade&lt;br&gt;Luminosidade&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" vertex="1" parent="1">
+          <mxGeometry x="342.5" y="85" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="HmkSvmM_FdpT99_8etO7-42" value="Alfredo: Coloca os ingrediente e poe as pizzas no forno&lt;br&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" vertex="1" parent="1">
+          <mxGeometry x="615" y="240" width="310" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="HmkSvmM_FdpT99_8etO7-43" value="Retira do forno e coloca na caixa" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" vertex="1" parent="1">
+          <mxGeometry x="817.5" y="420" width="190" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="HmkSvmM_FdpT99_8etO7-44" value="Luz da cozinha" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" vertex="1" parent="1">
+          <mxGeometry x="90" y="80" width="100" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="HmkSvmM_FdpT99_8etO7-46" value="&lt;span style=&quot;font-size: 14px&quot;&gt;Sensores: Sensor Ambiente&amp;nbsp;&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;Sensor de Movimento do tapete (medir tensao/corrente)&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;Sensor do Forno (mede a temperatura do forno)&lt;br&gt;&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="50" y="520" width="460" height="220" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
