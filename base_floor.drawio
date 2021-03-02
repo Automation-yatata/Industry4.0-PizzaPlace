@@ -1,140 +1,146 @@
-<mxfile host="app.diagrams.net" modified="2021-02-24T19:18:26.930Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36" etag="jgljTkwHebqg3N_vA6p5" version="14.4.3" type="github">
+<mxfile host="app.diagrams.net" modified="2021-03-02T17:38:26.319Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.190 Safari/537.36" etag="IYhNxI_qTSCu9dlvBFdB" version="14.4.3" type="github">
   <diagram id="O8cKu8hD9Wat7ur4KSWv" name="v1">
     <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="HmkSvmM_FdpT99_8etO7-1" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-1" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="257.5" y="340" width="130" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-2" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-2" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="387.5" y="340" width="140" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-3" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-3" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="527.5" y="340" width="140" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-4" value="FORNO" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-4" value="FORNO" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
           <mxGeometry x="687.5" y="300" width="130" height="130" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-5" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#a0522d;strokeColor=#6D1F00;fontColor=#ffffff;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-5" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#a0522d;strokeColor=#6D1F00;fontColor=#ffffff;" parent="1" vertex="1">
           <mxGeometry x="877.5" y="341.25" width="47.5" height="47.5" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-6" value="Caixa da&amp;nbsp;&lt;br&gt;Pizza" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-6" value="Caixa da&amp;nbsp;&lt;br&gt;Pizza" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
           <mxGeometry x="937.5" y="325" width="80" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-7" value="Jeremias" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-7" value="Jeremias" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
           <mxGeometry x="827.5" y="312.5" width="40" height="85" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-12" value="" style="triangle;whiteSpace=wrap;html=1;direction=north;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-12" value="" style="triangle;whiteSpace=wrap;html=1;direction=north;" parent="1" vertex="1">
           <mxGeometry x="312.5" y="295" width="30" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-13" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-13" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
           <mxGeometry x="312.5" y="265" width="30" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-14" value="" style="triangle;whiteSpace=wrap;html=1;direction=north;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-14" value="" style="triangle;whiteSpace=wrap;html=1;direction=north;" parent="1" vertex="1">
           <mxGeometry x="452.5" y="295" width="30" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-15" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-15" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
           <mxGeometry x="452.5" y="265" width="30" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-16" value="Robot 1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-16" value="Robot 1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="300" y="240" width="55" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-18" value="Robot 2" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-18" value="Robot 2" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="440" y="240" width="55" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-20" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#fad7ac;strokeColor=#b46504;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-20" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#fad7ac;strokeColor=#b46504;" parent="1" vertex="1">
           <mxGeometry x="652.5" y="346.25" width="47.5" height="47.5" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-21" value="" style="shape=actor;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-21" value="" style="shape=actor;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="617.5" y="265" width="50" height="65" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-23" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-23" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
           <mxGeometry x="367.5" y="346.25" width="47.5" height="47.5" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-25" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-25" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x" parent="1" vertex="1">
           <mxGeometry x="267.5" y="377.5" width="20" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-26" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-26" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x" parent="1" vertex="1">
           <mxGeometry x="407.5" y="377.5" width="20" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-28" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-28" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x" parent="1" vertex="1">
           <mxGeometry x="687.5" y="405" width="20" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-30" value="A/C - aquecer/arrefecer a sala&lt;br&gt;" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.patternFillRect;fillStyle=diagGrid;step=5;fillStrokeWidth=0.2;fillStrokeColor=#dddddd;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-30" value="A/C - aquecer/arrefecer a sala&lt;br&gt;" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.patternFillRect;fillStyle=diagGrid;step=5;fillStrokeWidth=0.2;fillStrokeColor=#dddddd;" parent="1" vertex="1">
           <mxGeometry x="80" y="200" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-29" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x;fillColor=#60a917;strokeColor=#2D7600;fontColor=#ffffff;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-29" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x;fillColor=#60a917;strokeColor=#2D7600;fontColor=#ffffff;" parent="1" vertex="1">
           <mxGeometry x="82.5" y="240" width="20" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-22" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-22" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
           <mxGeometry x="517.5" y="346.25" width="47.5" height="47.5" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-27" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-27" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x" parent="1" vertex="1">
           <mxGeometry x="547.5" y="377.5" width="20" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-33" value="Controlador de Humidade&lt;br&gt;Aumenta ou diminui a humidade na cozinha" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.patternFillRect;fillStyle=diagGrid;step=5;fillStrokeWidth=0.2;fillStrokeColor=#dddddd;direction=south;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-33" value="Controlador de Humidade&lt;br&gt;Aumenta ou diminui a humidade na cozinha" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.patternFillRect;fillStyle=diagGrid;step=5;fillStrokeWidth=0.2;fillStrokeColor=#dddddd;direction=south;" parent="1" vertex="1">
           <mxGeometry x="110" y="320" width="60" height="120" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-34" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x;fillColor=#60a917;strokeColor=#2D7600;fontColor=#ffffff;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-34" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x;fillColor=#60a917;strokeColor=#2D7600;fontColor=#ffffff;" parent="1" vertex="1">
           <mxGeometry x="110" y="420" width="20" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-35" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x;fillColor=#60a917;strokeColor=#2D7600;fontColor=#ffffff;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-35" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x;fillColor=#60a917;strokeColor=#2D7600;fontColor=#ffffff;" parent="1" vertex="1">
           <mxGeometry x="797.5" y="405" width="20" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-36" value="Coloca a&amp;nbsp;&lt;br&gt;massa no&lt;br&gt;tapete" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-36" value="Coloca a&amp;nbsp;&lt;br&gt;massa no&lt;br&gt;tapete" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" parent="1" vertex="1">
           <mxGeometry x="345" y="262.5" width="70" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-37" value="Deita e espalha&lt;br&gt;o molho de tomate" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-37" value="Deita e espalha&lt;br&gt;o molho de tomate" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" parent="1" vertex="1">
           <mxGeometry x="477.5" y="265" width="110" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-38" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.sun;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-38" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.sun;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
           <mxGeometry x="80" y="30" width="80" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-39" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x;fillColor=#60a917;strokeColor=#2D7600;fontColor=#ffffff;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-39" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x;fillColor=#60a917;strokeColor=#2D7600;fontColor=#ffffff;" parent="1" vertex="1">
           <mxGeometry x="110" y="70" width="20" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-40" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-40" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x" parent="1" vertex="1">
           <mxGeometry x="382.5" y="160" width="57.5" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-41" value="&lt;font style=&quot;font-size: 13px&quot;&gt;&lt;b&gt;Sensor Ambiente&lt;/b&gt;&lt;br&gt;&amp;nbsp;Temperatura&lt;br&gt;Humidade&lt;br&gt;Luminosidade&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-41" value="&lt;font style=&quot;font-size: 13px&quot;&gt;&lt;b&gt;Sensor Ambiente&lt;/b&gt;&lt;br&gt;&amp;nbsp;Temperatura&lt;br&gt;Humidade&lt;br&gt;Luminosidade&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" parent="1" vertex="1">
           <mxGeometry x="447.5" y="155" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-42" value="Alfredo: Coloca os ingrediente e poe as pizzas no forno&lt;br&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-42" value="Alfredo: Coloca os ingrediente e poe as pizzas no forno&lt;br&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" parent="1" vertex="1">
           <mxGeometry x="615" y="240" width="310" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-43" value="Retira do forno e coloca na caixa" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-43" value="Retira do forno e coloca na caixa" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" parent="1" vertex="1">
           <mxGeometry x="817.5" y="420" width="190" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-44" value="Luz da cozinha" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-44" value="Luz da cozinha" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" parent="1" vertex="1">
           <mxGeometry x="70" y="110" width="100" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-46" value="&lt;span style=&quot;font-size: 14px&quot;&gt;Sensores: Sensor Ambiente&amp;nbsp;&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;Sensor de Movimento do tapete (medir tensao/corrente)&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;Sensor do Forno (mede a temperatura do forno e a luz dele)&lt;br&gt;&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-46" value="&lt;span style=&quot;font-size: 14px&quot;&gt;Sensores: Sensor Ambiente&amp;nbsp;&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;Sensor de Movimento do tapete (medir tensao/corrente)&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;Sensor do Forno (mede a temperatura do forno e a luz dele)&lt;br&gt;&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="50" y="520" width="460" height="110" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-47" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-47" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x" parent="1" vertex="1">
           <mxGeometry x="70" y="570" width="20" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-50" value="&lt;span style=&quot;font-size: 14px&quot;&gt;Atuadores: Luz da cozinha&amp;nbsp;&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 14px&quot;&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;AC&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 14px&quot;&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; Controlador da humidade&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 14px&quot;&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; Resistência&amp;nbsp;do forno&lt;br&gt;&lt;/span&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; Robot&#39;s (assumir que trabalham em simultâneo)&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-50" value="&lt;span style=&quot;font-size: 14px&quot;&gt;Atuadores: Luz da cozinha&amp;nbsp;&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 14px&quot;&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;AC&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 14px&quot;&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; Controlador da humidade&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-size: 14px&quot;&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; Resistência&amp;nbsp;do forno&lt;br&gt;&lt;/span&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; Robot&#39;s (assumir que trabalham em simultâneo)&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="50" y="610" width="460" height="110" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-51" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x;fillColor=#60a917;strokeColor=#2D7600;fontColor=#ffffff;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-51" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x;fillColor=#60a917;strokeColor=#2D7600;fontColor=#ffffff;" parent="1" vertex="1">
           <mxGeometry x="70" y="650" width="20" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-52" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x;fillColor=#60a917;strokeColor=#2D7600;fontColor=#ffffff;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-52" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x;fillColor=#60a917;strokeColor=#2D7600;fontColor=#ffffff;" parent="1" vertex="1">
           <mxGeometry x="317.5" y="270" width="20" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-53" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x;fillColor=#60a917;strokeColor=#2D7600;fontColor=#ffffff;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-53" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.x;fillColor=#60a917;strokeColor=#2D7600;fontColor=#ffffff;" parent="1" vertex="1">
           <mxGeometry x="457.5" y="270" width="20" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-54" value="&lt;font style=&quot;font-size: 14px&quot;&gt;Ideias Gerais :&lt;br&gt;&lt;ul&gt;&lt;li&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;Manter a temperatura em torno dos 25ºC (+/- 1ºC)&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;Manter humidade entre 40 a 60 %&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;Manter a luz da cozinha ligada enquanto o forno estiver ligado bem como o tapete (ao final de um tempo de inatividade desligar a luz; caso detete de novo alguma desta variáveis tornar a ligar)&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;Os robots tem tempo de execução constantes (&lt;u&gt;valor a definir&lt;/u&gt;)&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;Em função do tempo de execução dos robots definir o movimento dos tapetes (gerar no MsgCreator esse sensor)&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;Assumir que se a luz do forno ligada então tem lá pizza (esse controlo já está implementado pelo fabricante do forno)&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;Controlar a temperatura do forno para um valor a definir e função do sensor de presença e da temperatura naquele instante&lt;/font&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-54" value="&lt;font style=&quot;font-size: 14px&quot;&gt;Ideias Gerais :&lt;br&gt;&lt;ul&gt;&lt;li&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;Manter a temperatura em torno dos 25ºC (+/- 1ºC)&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;Manter humidade entre 40 a 60 %&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;&lt;strike&gt;Manter a luz da cozinha ligada enquanto o forno estiver ligado bem como o tapete (ao final de um tempo de inatividade desligar a luz; caso detete de novo alguma desta variáveis tornar a ligar)&lt;/strike&gt;&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;Os robots tem tempo de execução constantes (&lt;u&gt;valor a definir&lt;/u&gt;)&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;Em função do tempo de execução dos robots definir o movimento dos tapetes (gerar no MsgCreator esse sensor)&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;Assumir que se a luz do forno ligada então tem lá pizza (esse controlo já está implementado pelo fabricante do forno)&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;Controlar a temperatura do forno para um valor a definir e função do sensor de presença e da temperatura naquele instante&lt;/font&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="617.5" y="440" width="462.5" height="240" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-55" value="&lt;font style=&quot;font-size: 14px&quot;&gt;Ideias Compostas :&lt;br&gt;&lt;ul&gt;&lt;li&gt;Se o Forno ON e Temp proximo 25ºC mas &amp;lt;25ºC não ligar AC.&lt;/li&gt;&lt;li&gt;Se a humidade próxima e &amp;lt;40% nao ligar o controlador se o forno estiver ligado. (assume-se que a humidade irá subir).&lt;/li&gt;&lt;li&gt;Se o Forno OFF, e AC e Controlador de Humidade ON e proximos do valor predefinido, desligá-los.&lt;/li&gt;&lt;/ul&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-55" value="&lt;font style=&quot;font-size: 14px&quot;&gt;Ideias Compostas :&lt;br&gt;&lt;ul&gt;&lt;li&gt;Se o Forno ON e Temp proximo 25ºC mas &amp;lt;25ºC não ligar AC.&lt;/li&gt;&lt;li&gt;Se a humidade próxima e &amp;lt;40% nao ligar o controlador se o forno estiver ligado. (assume-se que a humidade irá subir).&lt;/li&gt;&lt;li&gt;Se o Forno OFF, e AC e Controlador de Humidade ON e proximos do valor predefinido, desligá-los.&lt;/li&gt;&lt;/ul&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="620" y="680" width="462.5" height="130" as="geometry" />
         </mxCell>
-        <mxCell id="HmkSvmM_FdpT99_8etO7-56" value="Possíveis Extras:&lt;br&gt;&lt;ul&gt;&lt;li&gt;&lt;font color=&quot;#000000&quot;&gt;&lt;span style=&quot;font-weight: 400&quot;&gt;Medir potência instantânea consumida;&lt;br&gt;&lt;/span&gt;&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font color=&quot;#000000&quot;&gt;&lt;span style=&quot;font-weight: 400&quot;&gt;Medir a potencia consumida ao final de um certo tempo;&lt;/span&gt;&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font color=&quot;#000000&quot;&gt;&lt;span style=&quot;font-weight: 400&quot;&gt;Ser possível alterar estes valores predefinidos por um utilizador e senha especifica.&lt;/span&gt;&lt;/font&gt;&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;labelBackgroundColor=none;labelBorderColor=none;fontColor=#FF0000;fontSize=14;fontStyle=1" vertex="1" parent="1">
+        <mxCell id="HmkSvmM_FdpT99_8etO7-56" value="Possíveis Extras:&lt;br&gt;&lt;ul&gt;&lt;li&gt;&lt;font color=&quot;#000000&quot;&gt;&lt;span style=&quot;font-weight: 400&quot;&gt;Medir potência instantânea consumida;&lt;br&gt;&lt;/span&gt;&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font color=&quot;#000000&quot;&gt;&lt;span style=&quot;font-weight: 400&quot;&gt;Medir a potencia consumida ao final de um certo tempo;&lt;/span&gt;&lt;/font&gt;&lt;/li&gt;&lt;li&gt;&lt;font color=&quot;#000000&quot;&gt;&lt;span style=&quot;font-weight: 400&quot;&gt;Ser possível alterar estes valores predefinidos por um utilizador e senha especifica.&lt;/span&gt;&lt;/font&gt;&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;labelBackgroundColor=none;labelBorderColor=none;fontColor=#FF0000;fontSize=14;fontStyle=1" parent="1" vertex="1">
           <mxGeometry x="647.5" y="20" width="422.5" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="wrEDoQhQqZQOZilZP7Yv-1" value="Text" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="560" y="480" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="wrEDoQhQqZQOZilZP7Yv-3" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;&lt;font color=&quot;#ff0000&quot;&gt;Regras:&lt;/font&gt;&lt;br&gt;&lt;ul&gt;&lt;li&gt;&lt;b&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;Secção &lt;/font&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;1&lt;/font&gt;&lt;/b&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/font&gt;&lt;/b&gt;&lt;blockquote style=&quot;margin: 0 0 0 40px ; border: none ; padding: 0px&quot;&gt;&lt;ol&gt;&lt;li&gt;&lt;span style=&quot;font-size: 14px&quot;&gt;Ha sempre pizzas em cada posto, e deslocação se para o posto seguinte de 20 em 20s&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span style=&quot;font-size: 14px&quot;&gt;Os robots operam durante 15s entre as &lt;/span&gt;&lt;span style=&quot;font-size: 14px&quot;&gt;deslocações&lt;/span&gt;&lt;span style=&quot;font-size: 14px&quot;&gt;&amp;nbsp;da pizza&amp;nbsp;&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span style=&quot;font-size: 14px&quot;&gt; Sensor Ambiente Ta 26ºC +/-3ºC__S&amp;nbsp;&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;b style=&quot;font-size: 14px&quot;&gt;&amp;nbsp; &lt;/b&gt;&lt;span style=&quot;font-size: 14px&quot;&gt;Humidade Relativa 40 a 50%__S&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span style=&quot;font-size: 14px&quot;&gt;&amp;nbsp; Luminosidade 700 a 1000lux (se inferior liga luz e superior e LUZ ON desliga)_ jogar com o lux introduzido pela lampada__C&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span style=&quot;font-size: 14px&quot;&gt;&amp;nbsp; Humidade&amp;lt;40 liga ate atingir 50. Desliga e qd 40 liga de novo.&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span style=&quot;font-size: 14px&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/li&gt;&lt;/ol&gt;&lt;div style=&quot;font-size: 14px&quot;&gt;&lt;ul&gt;&lt;li&gt;&lt;span style=&quot;font-size: 14px&quot;&gt;&lt;b&gt;Secção 2&lt;/b&gt;&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;ol&gt;&lt;li&gt;Tforno ronda dar os 325&amp;nbsp; (se pizza) senão pode baixar até os 290 (para ligar de novo qd tiver a luz do forno on)__C&lt;/li&gt;&lt;li&gt;Intervalo de 8H para o forno ligado__S&lt;/li&gt;&lt;li&gt;FORNO ON e Temp&amp;lt;24ºC nao ligar aquecimento&lt;/li&gt;&lt;li&gt;&lt;br&gt;&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;&lt;/blockquote&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="20" width="661" height="400" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
