@@ -98,29 +98,55 @@ void check_values(int temp, int* rise_temp, int light, int *rise_light, int hum,
     //function for changing variation of sensor's functions
     //wrong variable changes when some condition is met so changes can be applied to file
 
-    if(temp > 26 && *wrong==0){
+    if(temp > 26){
 
         *rise_temp=-1;
         *wrong=1;
         
-    }else if (temp < 24 && *wrong==0){
+    }else if (temp < 24){
 
         *rise_temp=1;
         *wrong=1;
 
     }    
-    else if(*wrong==1 && (temp>26 && temp>24)){
+
+
+    if(hum > 60){
+
+        *rise_hum=-1;
+        *wrong=1;
+        
+    }else if (hum < 40){
+
+        *rise_hum=1;
+        *wrong=1;
+
+    }    
+    
+
+
+    if((temp<26 && temp>24) && (hum < 60 && hum > 40)){
 
         *wrong=0;
     }
-    
-
-    
-
 
 
 }
 
+
+
+
+void new_values (FILE *f, int*rise_temp, int* rise_light, int* rise_hum){
+
+
+    //change variables in file
+
+    fseek(f,0, SEEK_SET);
+    //fputc(teste,f);
+    fprintf(f, "-n 1 -l 100 -f 1 -c 1 -s [0,1,2,3,4] -d [['U',0.0,5.0,2.0],['L',400.0,700.0,1],['U',2.0,10.0,2.0],['L',20.0,30.0,%d],['L',30.0,70.0,%d]] -i 1",*rise_temp, *rise_hum);
+    //fseek(f,0,SEEK_CUR);
+    
+}
 
 int main()
 {
@@ -171,13 +197,7 @@ int main()
 
             if(wrong_values==1){
 
-                //printf("Alterar Valores\n");
-                //new_values(&rise_temp);
-                //sprintf(teste,rise_temp);
-                fseek(f, 113, SEEK_SET);
-                //fputc(teste,f);
-                fprintf(f, "%d",rise_temp);
-                fseek(f,0,SEEK_CUR);
+                new_values(f, &rise_temp, &rise_light, &rise_hum);
             }
 
 
