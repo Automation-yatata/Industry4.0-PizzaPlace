@@ -1,2 +1,2 @@
 
-![](images/product_vision_table.png)
+![](main/images/product_vision_table.png)
