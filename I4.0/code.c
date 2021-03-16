@@ -256,7 +256,7 @@ void load_sensorconfig(void)
         }
         else
         {
-            check_OK();
+            //check_OK();
             break;
         }
     }
@@ -305,8 +305,8 @@ int load_rules(void)
 
     while (fgets(line, 2 * MAX_CHAR, f) != NULL && k < MAX_RULES)
     {
-        printf("%s\n", line);
-        j=0;
+        //printf("%s\n", line);
+        j = 0;
 
         token = strtok(line, ":");
         //puts(token);
@@ -317,7 +317,7 @@ int load_rules(void)
 
         while (i < N_MOTES)
         {
-            
+
             sprintf(dec_to_str, "%d", i + 1);
             if (strstr(token, dec_to_str) != NULL)
             {
@@ -330,14 +330,14 @@ int load_rules(void)
                     return -1;
                 }
                 token = strtok(NULL, "\n");
-               
+
                 if (strcpy(predicate, token) == NULL)
                 {
                     printf("ERROR\n");
                     fclose(f);
                     return -1;
                 }
-               //puts(subject);puts(predicate);
+                //puts(subject);puts(predicate);
                 break;
             }
             else
@@ -376,19 +376,22 @@ int load_rules(void)
                 }
             }
         }
-        
-        j = 0;        
+
+        j = 0;
         //Load 2nd part (predicate) --> Atuactor; Cond:ON/OFF
-              
+
         while (j < N_ACTUATORS)
         {
 
             if (strstr(predicate, outputs_vetor[j].name) != NULL)
             {
 
+                char* token=strtok(predicate,":");
+                token=strtok(NULL,":");
                 // If ON, then we know that when the rules is verified(rgb_matrix_write=1), we need to
                 // turn ON the actuator
-                if (strstr(predicate, "ON") != NULL)
+                
+                if (strstr(token, "ON") != NULL)
                 {
                     rules_vec[k].out = &outputs_vetor[j].on;
                     k++;
@@ -398,7 +401,7 @@ int load_rules(void)
                 {
                     // If OFF, then we know that when the rules is verified(rgb_matrix_write=1), we need to
                     // turn OFF the actuator
-                    if (strstr(predicate, "OFF") != NULL)
+                    if (strstr(token, "OFF") != NULL)
                     {
                         rules_vec[k].out = &outputs_vetor[j].off;
                         k++;
@@ -423,12 +426,12 @@ int load_rules(void)
 
     i = 0;
 
-    while(i<k)
+    /*while (i < k)
     {
-        printf("%s_%c_%d || Actuator ON|OFF %d\n", rules_vec[i].sensor->name, 
-        rules_vec[i].operation,rules_vec[i].ref, *rules_vec[i].out );
+        printf("%s_%c_%d || Actuator ON|OFF %d\n", rules_vec[i].sensor->name,
+               rules_vec[i].operation, rules_vec[i].ref, *rules_vec[i].out);
         i++;
-    }
+    }*/
     fclose(f);
     return k;
 }
@@ -446,7 +449,8 @@ int main()
     }
 
     load_sensorconfig();
-    int rules_number=load_rules();
+
+    int rules_number = load_rules();
     return 0;
 
     int rise_temp = 1, rise_light = 1, rise_hum = 1;
