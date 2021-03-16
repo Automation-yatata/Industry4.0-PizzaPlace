@@ -19,7 +19,7 @@ float get_relative_humidity(long dec);
 float get_temp_humidity(float rel_hum, float temp, long dec);
 void load_sensorconfig(void);
 void check_OK(void);
-void load_rules(void);
+int load_rules(void);
 
 char str[MAX_CHAR];
 
@@ -287,8 +287,7 @@ void check_OK(void)
     printf("\n");
     return;
 }
-
-void load_rules(void)
+int load_rules(void)
 {
 
     FILE *f;
@@ -328,7 +327,7 @@ void load_rules(void)
                 {
                     printf("ERROR\n");
                     fclose(f);
-                    return;
+                    return -1;
                 }
                 token = strtok(NULL, "\n");
                
@@ -336,7 +335,7 @@ void load_rules(void)
                 {
                     printf("ERROR\n");
                     fclose(f);
-                    return;
+                    return -1;
                 }
                //puts(subject);puts(predicate);
                 break;
@@ -350,8 +349,8 @@ void load_rules(void)
         while (1)
         {
             // Load 1st part --> Sensor;Oper;Ref
-            puts(subject);puts(motes[i].pos[j].name);
-            printf("%d\n",j);
+            //puts(subject);puts(motes[i].pos[j].name);
+            //printf("%d\n",j);
 
             if (strstr(subject, motes[i].pos[j].name) != NULL)
             {
@@ -360,7 +359,7 @@ void load_rules(void)
                 // For operation one option is put ascii number and when check the condition compare to ascii
                 rules_vec[k].operation = subject[strlen(motes[i].pos[j].name)];
                 //printf("%c\n", rules_vec[i].operation);
-                sscanf(&subject[strlen(motes[i].pos[j].name) + 1], "%d", &rules_vec[i].ref);
+                sscanf(&subject[strlen(motes[i].pos[j].name) + 1], "%d", &rules_vec[k].ref);
                 break;
             }
             else
@@ -373,7 +372,7 @@ void load_rules(void)
                 {
                     printf("Error on detect sensor in mote %d\n", i + 1);
                     fclose(f);
-                    return;
+                    return -1;
                 }
             }
         }
@@ -409,7 +408,7 @@ void load_rules(void)
                     {
                         printf("ERROR on detect atuactor!\n");
                         fclose(f);
-                        return;
+                        return -1;
                     }
                 }
             }
@@ -426,13 +425,12 @@ void load_rules(void)
 
     while(i<k)
     {
-
-        printf(" Sensor %s Oper %c Ref %d || Actuator ON|OFF %d\n", rules_vec[i].sensor->name, rules_vec[i].operation,
-               rules_vec[i].ref, *rules_vec[i].out );
+        printf("%s_%c_%d || Actuator ON|OFF %d\n", rules_vec[i].sensor->name, 
+        rules_vec[i].operation,rules_vec[i].ref, *rules_vec[i].out );
         i++;
     }
     fclose(f);
-    return;
+    return k;
 }
 
 int main()
@@ -443,12 +441,12 @@ int main()
 
     if (f == NULL)
     {
-        printf("ERRROOOO\n");
+        printf("ERRO\n");
         exit(EXIT_FAILURE);
     }
 
     load_sensorconfig();
-    load_rules();
+    int rules_number=load_rules();
     return 0;
 
     int rise_temp = 1, rise_light = 1, rise_hum = 1;
