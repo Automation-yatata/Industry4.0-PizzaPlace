@@ -7,6 +7,7 @@
 #define N_MOTES 2       // motes number equals sections number
 #define N_SENSOR_MOTE 5 // number of sensor per mote
 #define MAX_RULES 20
+#define N_ACTUATORS 10
 
 long get_num_dec(int pos);
 int check_message_start(void);
@@ -43,7 +44,7 @@ typedef struct
 {
 
     layout *sensor;
-    layout *out;
+    int *out;
     char operation;
     int ref;
 
@@ -58,12 +59,12 @@ typedef struct
 {
 
     char name[25];
-    int rgb_matrix_write;
-    int cond;
+    int on;
+    int off;
 
 } OUTPUT;
 
-OUTPUT outputs_vetor[N_MOTES];
+OUTPUT outputs_vetor[N_ACTUATORS];
 
 long get_num_dec(int pos)
 {
@@ -193,7 +194,12 @@ void load_sensorconfig(void)
 
     FILE *f;
     char line[2 * MAX_CHAR];
-    int i = 0, j = 0;
+    char *token;
+    char *dec_to_str;
+    char inputs[MAX_CHAR];
+    char outputs[MAX_CHAR];
+    int i = 0, j = 0, cnt = 0;
+
     f = fopen("SensorConfigurations.txt", "r");
     if (f == NULL)
     {
@@ -202,57 +208,61 @@ void load_sensorconfig(void)
 
     while (1)
     {
+
         if (fgets(line, 2 * MAX_CHAR, f) != NULL)
         {
             //printf("%s\n", line);
-            char *token;
-            char *dec_to_str;
             token = strtok(line, ":");
-            char inputs[MAX_CHAR];
-            char outputs[MAX_CHAR];
-
             sprintf(dec_to_str, "%d", i + 1);
 
-            if (strstr(token, dec_to_str) != NULL)
+            while (1)
             {
-                token = strtok(NULL, ":");
-                strcpy(inputs, token);
-                token = strtok(NULL, "\n");
-                strcpy(outputs, token);
-
-                // write inputs on mote[]
-                token = strtok(inputs, ",");
-                while (token != NULL)
+                if (strstr(token, dec_to_str) != NULL)
                 {
-                    //printf("%s\n", token);
-                    strcpy(motes[i].pos[j].name, token);
-                    j++;
-                    token = strtok(NULL, ",");
-                }
-                // write outputs on outputs_vector[]
-                j = 0;
-                token = strtok(outputs, ",");
+                    token = strtok(NULL, ":");
+                    strcpy(inputs, token);
 
-                while (token != NULL)
-                {
-                    //printf("%s\n", token);
-                    strcpy(outputs_vetor[i].name, token);
-                    j++;
-                    token = strtok(NULL, ",");
+                    token = strtok(NULL, "\n");
+                    strcpy(outputs, token);
+
+                    break;
                 }
-                j = 0;
+                else
+                {
+                    i++;
+                    sprintf(dec_to_str, "%d", i + 1);
+                }
             }
-            i++;
+            // write inputs on mote[]
+            token = strtok(inputs, ",");
+            while (token != NULL)
+            {
+                strcpy(motes[i].pos[j].name, token);
+                j++;
+                token = strtok(NULL, ",");
+            }
+            j = 0;
+
+            // write outputs on outputs_vector[]
+            token = strtok(outputs, ",");
+
+            while (token != NULL && cnt < N_ACTUATORS)
+            {
+
+                strcpy(outputs_vetor[cnt].name, token);
+                cnt++;
+                token = strtok(NULL, ",");
+            }
         }
         else
         {
-            //check_OK();
-            fclose(f);
-            return;
+            check_OK();
+            break;
         }
     }
 
     fclose(f);
+    return;
 }
 
 void check_OK(void)
@@ -270,14 +280,12 @@ void check_OK(void)
     }
 
     printf("Vetor de Saidas\n");
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < N_ACTUATORS; i++)
     {
-        for (int j = 0; j < 5; j++)
-        {
-            printf("%s ", outputs_vetor[i].name);
-        }
-        printf("\n");
+        printf("%s ", outputs_vetor[i].name);
     }
+    printf("\n");
+    return;
 }
 
 void load_rules(void)
@@ -285,30 +293,37 @@ void load_rules(void)
 
     FILE *f;
     char line[2 * MAX_CHAR];
-    int i = 0;
+    int i = 0, k = 0, j = 0;
     f = fopen("SensorRules.txt", "r");
     if (f == NULL)
     {
-        printf("ERROR OPENING SensorConfig.txt\n");
+        printf("ERROR OPENING SensorRules.txt\n");
     }
     char *token;
-    char *dec_to_str;
+    char dec_to_str[3];
     char subject[MAX_CHAR];
     char predicate[MAX_CHAR];
 
-    while (fgets(line, 2 * MAX_CHAR, f) != NULL)
+    while (fgets(line, 2 * MAX_CHAR, f) != NULL && k < MAX_RULES)
     {
         printf("%s\n", line);
+        j=0;
 
         token = strtok(line, ":");
+        //puts(token);
 
-        
+        // i related to N_MOTES
+        // j related to pos[] in layout struct (whats sensor; 0(volt) etc)
+        // k  related to position in RULES vector
+
         while (i < N_MOTES)
         {
-        sprintf(dec_to_str, "%d", i + 1);
+            
+            sprintf(dec_to_str, "%d", i + 1);
             if (strstr(token, dec_to_str) != NULL)
             {
                 token = strtok(NULL, " ");
+
                 if (strcpy(subject, token) == NULL)
                 {
                     printf("ERROR\n");
@@ -316,44 +331,108 @@ void load_rules(void)
                     return;
                 }
                 token = strtok(NULL, "\n");
-
+               
                 if (strcpy(predicate, token) == NULL)
                 {
                     printf("ERROR\n");
                     fclose(f);
                     return;
                 }
-                int j = 0;
-                while (j < N_SENSOR_MOTE)
-                {
-                    if (strstr(subject, motes[i].pos[j].name) != NULL)
-                    {
-                        rules_vec[i].sensor = &motes[i].pos[j];
-                        //
-                        // For operation one option is put ascii number and when check the condition compare to ascii
-                        rules_vec[i].operation = subject[strlen(motes[i].pos[j].name)];
-                        //printf("%c\n", rules_vec[i].operation);
-                        sscanf(&subject[strlen(motes[i].pos[j].name) + 1], "%d", &rules_vec[i].ref);
-                        printf(" Sensor %s Oper %c Ref %d\n", rules_vec[i].sensor->name, rules_vec[i].operation, rules_vec[i].ref);
-                        break;
-                    }
-                    else
-                    {
-                        j++;
-                    }
-                }
-
-                //printf("Subject: %s \nPredicate: %s\n", subject, predicate);
+               //puts(subject);puts(predicate);
                 break;
             }
             else
             {
                 i++;
+                sprintf(dec_to_str, "%d", i + 1);
             }
         }
+        while (1)
+        {
+            // Load 1st part --> Sensor;Oper;Ref
+            puts(subject);puts(motes[i].pos[j].name);
+            printf("%d\n",j);
+
+            if (strstr(subject, motes[i].pos[j].name) != NULL)
+            {
+                rules_vec[k].sensor = &motes[i].pos[j];
+
+                // For operation one option is put ascii number and when check the condition compare to ascii
+                rules_vec[k].operation = subject[strlen(motes[i].pos[j].name)];
+                //printf("%c\n", rules_vec[i].operation);
+                sscanf(&subject[strlen(motes[i].pos[j].name) + 1], "%d", &rules_vec[i].ref);
+                break;
+            }
+            else
+            {
+                if (j < N_SENSOR_MOTE)
+                {
+                    j++;
+                }
+                else
+                {
+                    printf("Error on detect sensor in mote %d\n", i + 1);
+                    fclose(f);
+                    return;
+                }
+            }
+        }
+        
+        j = 0;        
+        //Load 2nd part (predicate) --> Atuactor; Cond:ON/OFF
+              
+        while (j < N_ACTUATORS)
+        {
+
+            if (strstr(predicate, outputs_vetor[j].name) != NULL)
+            {
+
+                // If ON, then we know that when the rules is verified(rgb_matrix_write=1), we need to
+                // turn ON the actuator
+                if (strstr(predicate, "ON") != NULL)
+                {
+                    rules_vec[k].out = &outputs_vetor[j].on;
+                    k++;
+                    break;
+                }
+                else
+                {
+                    // If OFF, then we know that when the rules is verified(rgb_matrix_write=1), we need to
+                    // turn OFF the actuator
+                    if (strstr(predicate, "OFF") != NULL)
+                    {
+                        rules_vec[k].out = &outputs_vetor[j].off;
+                        k++;
+                        break;
+                    }
+                    else
+                    {
+                        printf("ERROR on detect atuactor!\n");
+                        fclose(f);
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                j++;
+            }
+        }
+
         i = 0;
     }
+
+    i = 0;
+
+    while(i<k)
+    {
+
+        printf(" Sensor %s Oper %c Ref %d || Actuator ON|OFF %d\n", rules_vec[i].sensor->name, rules_vec[i].operation,
+               rules_vec[i].ref, *rules_vec[i].out );
+        i++;
+    }
     fclose(f);
+    return;
 }
 
 int main()
@@ -392,6 +471,8 @@ int main()
                 temperature = get_temperature(get_num_dec(48));
                 rel_humidity = get_relative_humidity(get_num_dec(54));
                 humidity_temp = get_temp_humidity(rel_humidity, temperature, get_num_dec(54));
+
+                //motes[moteID]....
 
                 printf("Mote:%.0f Volt:%.2f Light:%.2f Current:%.2f Temp:%.2f Rel_Hum:%.2f Temp_Hum:%.2f\n", moteID, voltage, light, current, temperature, rel_humidity, humidity_temp);
             }
