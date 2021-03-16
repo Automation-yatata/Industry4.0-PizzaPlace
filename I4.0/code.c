@@ -20,13 +20,14 @@ float get_temp_humidity(float rel_hum, float temp, long dec);
 void load_sensorconfig(void);
 void check_OK(void);
 int load_rules(void);
+void print_mote(void);
 
 char str[MAX_CHAR];
 
 typedef struct
 {
 
-    int value;
+    float value;
     char name[25];
 
 } layout;
@@ -51,9 +52,6 @@ typedef struct
 } RULES;
 
 RULES rules_vec[MAX_RULES];
-
-//pode-se fazer um contador de regras, a contar cada \n
-//para depois criar o RULES com esse tamanho
 
 typedef struct
 {
@@ -92,12 +90,12 @@ float get_voltage(long dec)
 float get_light(long dec)
 {
 
-    return (0.625 * 106 * (((float)dec / 4096) * 1.5 / 10) * 1000);
+    return (0.625 * 1000000 * (((float)dec / 4096) * 1.5 / 100000) * 1000);
 }
 float get_current(long dec)
 {
 
-    return (0.769 * 105 * (((float)dec / 4096) * 1.5 / 100) * 1000);
+    return (0.769 * 100000 * (((float)dec / 4096) * 1.5 / 100000) * 1000);
 }
 float get_temperature(long dec)
 {
@@ -386,11 +384,11 @@ int load_rules(void)
             if (strstr(predicate, outputs_vetor[j].name) != NULL)
             {
 
-                char* token=strtok(predicate,":");
-                token=strtok(NULL,":");
+                char *token = strtok(predicate, ":");
+                token = strtok(NULL, ":");
                 // If ON, then we know that when the rules is verified(rgb_matrix_write=1), we need to
                 // turn ON the actuator
-                
+
                 if (strstr(token, "ON") != NULL)
                 {
                     rules_vec[k].out = &outputs_vetor[j].on;
@@ -435,10 +433,19 @@ int load_rules(void)
     fclose(f);
     return k;
 }
+void print_mote(void)
+{
+
+    for (int i = 0; i < N_MOTES; i++)
+    {
+        int j=0;
+        printf("[%d] Volt:%.2f Light:%.2f Curr:%.2f Temp:%.2f Temp_Hum:%.2f\n", i,
+        motes[i].pos[j].value,motes[i].pos[j+1].value,motes[i].pos[j+2].value,motes[i].pos[j+3].value,motes[i].pos[j+4].value);
+    }
+}
 
 int main()
 {
-
     FILE *f;
     f = fopen("MsgCreatorConf.txt", "r+");
 
@@ -451,12 +458,11 @@ int main()
     load_sensorconfig();
 
     int rules_number = load_rules();
-    return 0;
 
     int rise_temp = 1, rise_light = 1, rise_hum = 1;
     int wrong_values = 0;
-
-    float moteID, voltage, light, current, temperature, rel_humidity, humidity_temp;
+    int moteID;
+    float voltage, light, current, temperature, rel_humidity, humidity_temp;
 
     while (1)
     {
@@ -466,30 +472,54 @@ int main()
             //printf("VALOR_LIDO: %s", str);
             if (check_message_start() == 1)
             {
-                moteID = get_num_dec(15);
+                moteID = (int)get_num_dec(15);
                 voltage = get_voltage(get_num_dec(30));
                 light = get_light(get_num_dec(36));
                 current = get_current(get_num_dec(42));
                 temperature = get_temperature(get_num_dec(48));
                 rel_humidity = get_relative_humidity(get_num_dec(54));
                 humidity_temp = get_temp_humidity(rel_humidity, temperature, get_num_dec(54));
+                int j = 0;
+                while (j < N_SENSOR_MOTE)
+                {
 
-                //motes[moteID]....
-
-                printf("Mote:%.0f Volt:%.2f Light:%.2f Current:%.2f Temp:%.2f Rel_Hum:%.2f Temp_Hum:%.2f\n", moteID, voltage, light, current, temperature, rel_humidity, humidity_temp);
+                    if (strstr(motes[moteID-1].pos[j].name, "VOLT") != NULL)
+                    {
+                        motes[moteID-1].pos[j].value = voltage;
+                    }
+                    else if (strstr(motes[moteID-1].pos[j].name, "LIGHT") != NULL)
+                    {
+                        motes[moteID-1].pos[j].value = light;
+                    }
+                    else if (strstr(motes[moteID-1].pos[j].name, "CURR") != NULL)
+                    {
+                        motes[moteID-1].pos[j].value = current;
+                    }
+                    else if (strstr(motes[moteID-1].pos[j].name, "TEMP") != NULL)
+                    {
+                        motes[moteID-1].pos[j].value = temperature;
+                    }
+                    else if (strstr(motes[moteID-1].pos[j].name, "HUM") != NULL)
+                    {
+                        motes[moteID-1].pos[j].value = humidity_temp;
+                    }
+                    j++;
+                }
             }
-            else
-            {
-                printf("Error on Message !\n ");
-            }
 
-            check_values(temperature, &rise_temp, light, &rise_light, rel_humidity, &rise_hum, &wrong_values);
+            print_mote();
+        }
+        else
+        {
+            printf("Error on Message !\n ");
+        }
 
-            if (wrong_values == 1)
-            {
+        check_values(temperature, &rise_temp, light, &rise_light, rel_humidity, &rise_hum, &wrong_values);
 
-                new_values(f, &rise_temp, &rise_light, &rise_hum);
-            }
+        if (wrong_values == 1)
+        {
+
+            new_values(f, &rise_temp, &rise_light, &rise_hum);
         }
     }
 
