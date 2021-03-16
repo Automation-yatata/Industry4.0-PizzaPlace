@@ -236,7 +236,7 @@ void load_sensorconfig(void)
                 while (token != NULL)
                 {
                     //printf("%s\n", token);
-                    strcpy(outputs_vetor[i].pos[j].name, token);
+                    strcpy(outputs_vetor[i].name, token);
                     j++;
                     token = strtok(NULL, ",");
                 }
@@ -274,7 +274,7 @@ void check_OK(void)
     {
         for (int j = 0; j < 5; j++)
         {
-            printf("%s ", outputs_vetor[i].pos[j].name);
+            printf("%s ", outputs_vetor[i].name);
         }
         printf("\n");
     }
