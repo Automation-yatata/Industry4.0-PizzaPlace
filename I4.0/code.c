@@ -21,6 +21,7 @@ void load_sensorconfig(void);
 void check_OK(void);
 int load_rules(void);
 void print_mote(void);
+void write_2_RGB(void);
 
 char str[MAX_CHAR];
 
@@ -444,6 +445,29 @@ void print_mote(void)
     }
 }
 
+void write_2_RGB(void){
+
+#define BLUE "[0,0,254]"
+#define GREEN "[0,254,0]"
+#define RED "[254,0,0]"
+#define BLACK "[0,0,0]"
+
+const char *channelRGB = "/tmp/ttyV10";
+FILE *matrix_channel;
+
+matrix_channel= fopen(channelRGB, "w");
+
+    //fprintf(matrix_channel, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s 
+    //,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
+    //"["BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,GREEN,GREEN,GREEN,GREEN,BLACK,BLACK,BLACK,BLACK,BLUE,BLUE,BLUE,BLUE,BLACK,BLACK,BLACK,BLACK,GREEN,GREEN,GREEN,GREEN,BLACK,BLACK 
+    //,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,GREEN,GREEN,GREEN,GREEN,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK "]\n");
+
+    fprintf(matrix_channel, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s", "["BLACK,GREEN,GREEN,RED,RED,BLACK,BLACK,BLUE,BLUE,BLUE,BLUE,BLACK,BLACK,RED,RED,RED,RED,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,GREEN,GREEN,GREEN,GREEN,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK"]\n");
+
+
+    fclose(matrix_channel);
+}
+
 int main()
 {
     FILE *f;
@@ -521,6 +545,7 @@ int main()
 
             new_values(f, &rise_temp, &rise_light, &rise_hum);
         }
+        write_2_RGB();
     }
 
     fclose(f);
