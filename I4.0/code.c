@@ -9,6 +9,11 @@
 #define MAX_RULES 20
 #define N_ACTUATORS 10
 
+#define BLUE "[0,0,254]"
+#define GREEN "[0,254,0]"
+#define RED "[254,0,0]"
+#define BLACK "[0,0,0]"
+
 long get_num_dec(int pos);
 int check_message_start(void);
 float get_voltage(long dec);
@@ -21,7 +26,8 @@ void load_sensorconfig(void);
 void check_OK(void);
 int load_rules(void);
 void print_mote(void);
-void write_2_RGB(void);
+void write_2_RGB(FILE *matrix_channel);
+void outputs_update(void);
 
 char str[MAX_CHAR];
 
@@ -192,9 +198,10 @@ void load_sensorconfig(void)
 {
 
     FILE *f;
+    
     char line[2 * MAX_CHAR];
     char *token;
-    char *dec_to_str;
+    char dec_to_str[3];
     char inputs[MAX_CHAR];
     char outputs[MAX_CHAR];
     int i = 0, j = 0, cnt = 0;
@@ -204,6 +211,7 @@ void load_sensorconfig(void)
     {
         printf("ERROR OPENING SensorConfig.txt\n");
     }
+    
 
     while (1)
     {
@@ -440,46 +448,68 @@ void print_mote(void)
     for (int i = 0; i < N_MOTES; i++)
     {
         int j=0;
-        printf("[%d] Volt:%.2f Light:%.2f Curr:%.2f Temp:%.2f Temp_Hum:%.2f\n", i,
-        motes[i].pos[j].value,motes[i].pos[j+1].value,motes[i].pos[j+2].value,motes[i].pos[j+3].value,motes[i].pos[j+4].value);
+        printf("[%d] %s:%.2f %s:%.2f %s:%.2f %s:%.2f %s:%.2f\n", i+1, motes[i].pos[j].name,
+        motes[i].pos[j].value,motes[i].pos[j+1].name, motes[i].pos[j+1].value,motes[i].pos[j+2].name, motes[i].pos[j+2].value,motes[i].pos[j+3].name, motes[i].pos[j+3].value,motes[i].pos[j+4].name, motes[i].pos[j+4].value);
     }
 }
 
-void write_2_RGB(void){
+void write_2_RGB(FILE *matrix_channel)
+{
 
-#define BLUE "[0,0,254]"
-#define GREEN "[0,254,0]"
-#define RED "[254,0,0]"
-#define BLACK "[0,0,0]"
+    //const char *channelRGB = "/tmp/ttyV10";
+    //FILE *matrix_channel;
 
-const char *channelRGB = "/tmp/ttyV10";
-FILE *matrix_channel;
-
-matrix_channel= fopen(channelRGB, "w");
+    //matrix_channel= fopen(channelRGB, "w");
 
     //fprintf(matrix_channel, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s 
     //,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
     //"["BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,GREEN,GREEN,GREEN,GREEN,BLACK,BLACK,BLACK,BLACK,BLUE,BLUE,BLUE,BLUE,BLACK,BLACK,BLACK,BLACK,GREEN,GREEN,GREEN,GREEN,BLACK,BLACK 
     //,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,GREEN,GREEN,GREEN,GREEN,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK "]\n");
 
-    fprintf(matrix_channel, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s", "["BLACK,GREEN,GREEN,RED,RED,BLACK,BLACK,BLUE,BLUE,BLUE,BLUE,BLACK,BLACK,RED,RED,RED,RED,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,GREEN,GREEN,GREEN,GREEN,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK"]\n");
+    char *ATUATOR;
 
+    if (outputs_vetor[0].on==1 || outputs_vetor[0].off==1){
+        strcpy ( ATUATOR,"[255,255,0]");
+    }
+    else strcpy ( ATUATOR,"[255,255,255]");
+
+    fprintf(matrix_channel, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s", "["BLACK,GREEN,GREEN,ATUATOR,ATUATOR,BLACK,BLACK,BLUE,BLUE,BLUE,BLUE,BLACK,BLACK,RED,RED,RED,RED,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,GREEN,GREEN,GREEN,GREEN,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK"]\n");
+
+    for (int i=0; i<N_ACTUATORS; i++){
+
+        outputs_vetor[i].on=0;
+        outputs_vetor[i].off=0;
+    }
 
     fclose(matrix_channel);
 }
 
+void outputs_update(void){
+
+    for (int i=0; i<MAX_RULES; i++){
+
+        if (rules_vec[i].operation==0){
+            break;
+        }
+        else{
+
+            if (strcmp(&rules_vec[i].operation, ">") && rules_vec[i].sensor->value > rules_vec[i].ref){
+                *rules_vec[i].out=1;
+            }
+
+            if (strcmp(&rules_vec[i].operation, "<") && rules_vec[i].sensor->value < rules_vec[i].ref){
+                *rules_vec[i].out=1;
+            }
+        }
+    }
+}
+
 int main()
 {
-    FILE *f;
-    f = fopen("MsgCreatorConf.txt", "r+");
-
-    if (f == NULL)
-    {
-        printf("ERRO\n");
-        exit(EXIT_FAILURE);
-    }
-
+    FILE *f_terminal;
+    
     load_sensorconfig();
+        
 
     int rules_number = load_rules();
 
@@ -488,12 +518,23 @@ int main()
     int moteID;
     float voltage, light, current, temperature, rel_humidity, humidity_temp;
 
+    //outputs_update();
+
+
     while (1)
     {
+        f_terminal = fopen("/tmp/ttyV10", "r");
 
-        if (fgets(str, MAX_CHAR, stdin) != NULL)
+            if (f_terminal == NULL)
+            {
+                printf("ERRO\n");
+                exit(EXIT_FAILURE);
+            }
+        
+        if (fgets(str, MAX_CHAR, f_terminal) != NULL)
         {
-            //printf("VALOR_LIDO: %s", str);
+            printf("Passed\n");
+            printf("VALOR_LIDO: %s", str);
             if (check_message_start() == 1)
             {
                 moteID = (int)get_num_dec(15);
@@ -538,15 +579,17 @@ int main()
             printf("Error on Message !\n ");
         }
 
-        check_values(temperature, &rise_temp, light, &rise_light, rel_humidity, &rise_hum, &wrong_values);
+        /*check_values(temperature, &rise_temp, light, &rise_light, rel_humidity, &rise_hum, &wrong_values);
 
         if (wrong_values == 1)
         {
-
-            new_values(f, &rise_temp, &rise_light, &rise_hum);
+         
+            new_values(f_msgcreator, &rise_temp, &rise_light, &rise_hum);
+            
         }
-        write_2_RGB();
+        outputs_update();
+        write_2_RGB(f_terminal);*/
     }
-
-    fclose(f);
+        fclose(f_terminal);
+    
 }
