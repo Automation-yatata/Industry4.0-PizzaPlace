@@ -26,7 +26,7 @@ void load_sensorconfig(void);
 void check_OK(void);
 int load_rules(void);
 void print_mote(void);
-void write_2_RGB(FILE *matrix_channel);
+void write_2_RGB();
 void outputs_update(void);
 
 char str[MAX_CHAR];
@@ -453,20 +453,20 @@ void print_mote(void)
     }
 }
 
-void write_2_RGB(FILE *matrix_channel)
+void write_2_RGB()
 {
 
-    //const char *channelRGB = "/tmp/ttyV10";
-    //FILE *matrix_channel;
+    const char *channelRGB = "/tmp/ttyV13";
+    FILE *matrix_channel;
 
-    //matrix_channel= fopen(channelRGB, "w");
+    matrix_channel= fopen(channelRGB, "w");
 
     //fprintf(matrix_channel, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s 
     //,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
     //"["BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,GREEN,GREEN,GREEN,GREEN,BLACK,BLACK,BLACK,BLACK,BLUE,BLUE,BLUE,BLUE,BLACK,BLACK,BLACK,BLACK,GREEN,GREEN,GREEN,GREEN,BLACK,BLACK 
     //,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,GREEN,GREEN,GREEN,GREEN,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK "]\n");
 
-    char *ATUATOR;
+    char *ATUATOR= malloc(sizeof(char)*1024);
 
     if (outputs_vetor[0].on==1 || outputs_vetor[0].off==1){
         strcpy ( ATUATOR,"[255,255,0]");
@@ -481,6 +481,7 @@ void write_2_RGB(FILE *matrix_channel)
         outputs_vetor[i].off=0;
     }
 
+    free(ATUATOR);
     fclose(matrix_channel);
 }
 
@@ -587,8 +588,8 @@ int main()
             new_values(f_msgcreator, &rise_temp, &rise_light, &rise_hum);
             
         }
-        outputs_update();
-        write_2_RGB(f_terminal);*/
+        outputs_update();*/
+        write_2_RGB();
     }
         fclose(f_terminal);
     
