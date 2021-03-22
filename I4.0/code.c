@@ -13,6 +13,7 @@
 #define GREEN "[0,254,0]"
 #define RED "[254,0,0]"
 #define BLACK "[0,0,0]"
+#define WHITE "[255,255,255]"
 
 long get_num_dec(int pos);
 int check_message_start(void);
@@ -508,19 +509,25 @@ if (par==0){
 
         for (int j=0; j<((celulas_matriz-celulas_matriz/2)/2)+1; j++){
             //printf("j=%i",j);
-        fprintf(fp, "%s", GREEN);
+        fprintf(fp, "%s,", BLACK);
         }
 
         for(int k=0; k<2; k++){
-        fprintf(fp, "%s", GREEN);            
+            if(outputs_vetor[i].on==1)
+        fprintf(fp, "%s,", GREEN);
+        else if (outputs_vetor[i].off==1)
+        fprintf(fp,"%s,", RED);
+        else fprintf(fp, "%s,", WHITE);            
         }
 
         for(int l=0; l<((celulas_matriz-celulas_matriz/2)/2); l++){
-        fprintf(fp, "%s", GREEN);
+            if (l==((celulas_matriz-celulas_matriz/2)/2)-1 && i==celulas_matriz-1)
+        fprintf(fp, "%s", BLACK);
+        else fprintf(fp, "%s,", BLACK);
         }
 
     }
-    fprintf(fp, "]");
+    fprintf(fp, "]\n");
 }
 
 fclose(fp);
@@ -538,7 +545,7 @@ file_contents[input_file_size] = 0;
 
 
 fprintf(matrix_channel, "%s", file_contents);
-//printf("%s", file_contents);
+printf("%s", file_contents);
 /*char ch;
 
 ch = fgetc(fp);
