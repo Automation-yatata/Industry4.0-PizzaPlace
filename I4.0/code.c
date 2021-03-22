@@ -461,19 +461,96 @@ void write_2_RGB()
 
     matrix_channel= fopen(channelRGB, "w");
 
+    int n_atuadores=0;
+    for (int i=0; i<N_ACTUATORS; i++){
+        if (!strncmp(outputs_vetor[i].name,"\0",3)) break;
+        else n_atuadores++;
+    }
+
+    int n_seccões= N_MOTES;
+
+    int celulas_matriz= n_atuadores + n_seccões-1;
+
+    FILE *f;
+    f= fopen("RGBMatrixConf.txt", "w");
+
+    FILE *fp;
+    fp= fopen("matrix.txt", "w");
+
+    fprintf(f,"-a %i -b 50", celulas_matriz); 
     //fprintf(matrix_channel, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s 
     //,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
     //"["BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,GREEN,GREEN,GREEN,GREEN,BLACK,BLACK,BLACK,BLACK,BLUE,BLUE,BLUE,BLUE,BLACK,BLACK,BLACK,BLACK,GREEN,GREEN,GREEN,GREEN,BLACK,BLACK 
     //,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,GREEN,GREEN,GREEN,GREEN,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK "]\n");
 
-    char *ATUATOR= malloc(sizeof(char)*1024);
+    /*char *ATUATOR= malloc(sizeof(char)*1024);
 
     if (outputs_vetor[0].on==1 || outputs_vetor[0].off==1){
         strcpy ( ATUATOR,"[255,255,0]");
     }
     else strcpy ( ATUATOR,"[255,255,255]");
+*/
+    //fprintf(matrix_channel, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s", "["BLACK,GREEN,GREEN,ATUATOR,ATUATOR,BLACK,BLACK,BLUE,BLUE,BLUE,BLUE,BLACK,BLACK,RED,RED,RED,RED,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,GREEN,GREEN,GREEN,GREEN,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK"]\n");
 
-    fprintf(matrix_channel, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s", "["BLACK,GREEN,GREEN,ATUATOR,ATUATOR,BLACK,BLACK,BLUE,BLUE,BLUE,BLUE,BLACK,BLACK,RED,RED,RED,RED,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,GREEN,GREEN,GREEN,GREEN,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK,BLACK"]\n");
+int par;
+
+if(celulas_matriz % 2 == 0)
+        par=1;
+    else
+        par=0;
+
+
+if (par==0){
+    fprintf(fp, "[");
+
+    for (int i=0; i<celulas_matriz; i++){
+
+
+        for (int j=0; j<((celulas_matriz-celulas_matriz/2)/2)+1; j++){
+            //printf("j=%i",j);
+        fprintf(fp, "%s", GREEN);
+        }
+
+        for(int k=0; k<2; k++){
+        fprintf(fp, "%s", GREEN);            
+        }
+
+        for(int l=0; l<((celulas_matriz-celulas_matriz/2)/2); l++){
+        fprintf(fp, "%s", GREEN);
+        }
+
+    }
+    fprintf(fp, "]");
+}
+
+fclose(fp);
+
+char *file_contents;
+long input_file_size;
+FILE *input_file = fopen("matrix.txt", "rb");
+fseek(input_file, 0, SEEK_END);
+input_file_size = ftell(input_file);
+rewind(input_file);
+file_contents = malloc((input_file_size + 1) * (sizeof(char)));
+fread(file_contents, sizeof(char), input_file_size, input_file);
+fclose(input_file);
+file_contents[input_file_size] = 0;
+
+
+fprintf(matrix_channel, "%s", file_contents);
+//printf("%s", file_contents);
+/*char ch;
+
+ch = fgetc(fp);
+    while (ch != EOF)
+    {
+        
+        fputc(ch, matrix_channel);
+
+        
+        ch = fgetc(fp);
+    }
+    */
 
     for (int i=0; i<N_ACTUATORS; i++){
 
@@ -481,8 +558,10 @@ void write_2_RGB()
         outputs_vetor[i].off=0;
     }
 
-    free(ATUATOR);
+    //free(ATUATOR);
     fclose(matrix_channel);
+    fclose(f);
+    
 }
 
 void outputs_update(void){
@@ -494,11 +573,11 @@ void outputs_update(void){
         }
         else{
 
-            if (strcmp(&rules_vec[i].operation, ">") && rules_vec[i].sensor->value > rules_vec[i].ref){
+            if (!strcmp(&rules_vec[i].operation, ">") && rules_vec[i].sensor->value > rules_vec[i].ref){
                 *rules_vec[i].out=1;
             }
 
-            if (strcmp(&rules_vec[i].operation, "<") && rules_vec[i].sensor->value < rules_vec[i].ref){
+            if (!strcmp(&rules_vec[i].operation, "<") && rules_vec[i].sensor->value < rules_vec[i].ref){
                 *rules_vec[i].out=1;
             }
         }
@@ -587,8 +666,8 @@ int main()
          
             new_values(f_msgcreator, &rise_temp, &rise_light, &rise_hum);
             
-        }
-        outputs_update();*/
+        }*/
+        outputs_update();
         write_2_RGB();
     }
         fclose(f_terminal);
