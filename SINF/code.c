@@ -685,6 +685,8 @@ int load_rules(void)
             }
         }
         //printf("Sucess Mote:%d\n",i+1);
+        int true_i=i;
+        i=0;
 
         while (1)
         {
@@ -728,6 +730,11 @@ int load_rules(void)
                 if (j < N_SENSOR_MOTE)
                 {
                     j++;
+                    if (j == N_SENSOR_MOTE)
+                    {
+                        j = 0;
+                        i++;
+                    }
                 }
                 else
                 {
@@ -739,7 +746,6 @@ int load_rules(void)
         }
 
         j = 0;
-        int true_i = i;
         i = 0;
 
         while (1)
