@@ -911,10 +911,10 @@ void write_2_RGB()
     for (int i=0; i<N_ACTUATORS; i++){
         if (!strncmp(outputs_vetor[i].name,"\0",3)) break;
 
-        //printf("pqp");
+        //printf("teste");
         //printf("%s %s \n", outputs_vetor[i].name, outputs_vetor[i+1].name);
-        //if (strstr(str, outputs_vetor[i+1].name)==NULL) printf("po caralho\n");
-        //if (strstr(str, outputs_vetor[i].name)!=NULL) printf("tua cota\n");
+        //if (strstr(str, outputs_vetor[i+1].name)==NULL) printf("teste1\n");
+        //if (strstr(str, outputs_vetor[i].name)!=NULL) printf("teste2\n");
         //printf("%s\n", str);
         if (strstr(outputs_vetor[i].name, str)!=NULL && strstr(outputs_vetor[i+1].name, str)==NULL && strncmp(outputs_vetor[i].name,"\0",3)){
 
