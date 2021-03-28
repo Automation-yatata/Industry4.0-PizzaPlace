@@ -5,7 +5,7 @@
 #include <time.h>
 
 #define MAX_CHAR 75
-#define N_MOTES 1      // motes number equals sections number
+#define N_MOTES 2      // motes number equals sections number
 #define N_SENSOR_MOTE 5 // number of sensor per mote
 #define MAX_RULES 20
 #define N_ACTUATORS 10
