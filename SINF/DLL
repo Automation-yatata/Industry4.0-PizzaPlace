@@ -1,0 +1,21 @@
+CREATE SCHEMA gman;
+
+CREATE TABLE rule (
+    rule_id SERIAL PRIMARY KEY
+);
+
+CREATE TABLE actuator (
+    name VARCHAR(45) PRIMARY KEY,
+    actual_state BOOLEAN 
+);
+
+CREATE TABLE actuator_vec (
+
+    date CURRENT_TIMESTAMP PRIMARY KEY,
+    state BOOLEAN
+);
+
+CREATE TABLE r_subr (
+
+    
+);
