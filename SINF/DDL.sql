@@ -1,4 +1,4 @@
-CREATE SCHEMA gman;
+CREATE SCHEMA gman_a35;
 
 CREATE TABLE rule (
 
@@ -9,34 +9,44 @@ CREATE TABLE rule (
 CREATE TABLE actuator (
 
     name VARCHAR(45),
-    actual_state BOOLEAN, 
+    actual_state BOOLEAN NOT NULL, 
     CONSTRAINT PK_act_name PRIMARY KEY (name)
 );
 
 CREATE TABLE actuator_vec (
 
     date CURRENT_TIMESTAMP,
-    state BOOLEAN,
-    CONSTRAINT PK_act_vec PRIMARY KEY (date)
+    state BOOLEAN NOT NULL,
+    CONSTRAINT PK_act_vec PRIMARY KEY (date,name)
 );
 
-CREATE TABLE r_subr (
+CREATE TABLE op_r_subr (
 
-    op_between_rules VARCHAR(5)
+    op_between_rules VARCHAR(5),
+    CONSTRAINT PRIMARY KEY (subrule_id) 
 );
+
+CREATE TABLE subrule(
+
+    subrule_id SERIAL,
+    operation VARCHAR(2) NOT NULL,
+    ref NUMERIC(3,2) NOT NULL,
+    CONSTRAINT PK_subRule PRIMARY KEY (subrule_id)
+);
+
 
 CREATE TABLE sensor (
 
     name VARCHAR(45),
-    actual_value NUMERIC(3,2),
+    actual_value NUMERIC(3,2) NOT NULL ,
     CONSTRAINT PK_sens_name PRIMARY KEY (name)
 );
 
 CREATE TABLE sensor_vec (
     
     date CURRENT_TIMESTAMP,
-    value NUMERIC(3,2),
-    CONSTRAINT PK_sens_vec PRIMARY KEY (date)
+    value NUMERIC(3,2) NOT NULL ,
+    CONSTRAINT PK_sens_vec PRIMARY KEY (date,name)
 );
 
 CREATE TABLE mote (
@@ -53,4 +63,14 @@ CREATE TABLE section(
 ALTER TABLE rule ADD CONSTRAINT FK_RuleActName
     FOREIGN KEY (name) REFERENCES actuator (name) NOT NULL;
 
-ALTER TABLE 
+ALTER TABLE actuator_vec ADD CONSTRAINT FK_Name
+    FOREIGN KEY (name) REFERENCES actuator(name);
+
+ALTER TABLE r_subr ADD CONSTRAINT FK_ruleID 
+    FOREIGN KEY (rule_id) REFERENCES rule (rule_id);
+
+ALTER TABLE r_subr ADD CONSTRAINT FK_SubRuleID
+    FOREIGN KEY (subrule_id) REFERENCES subrule (subrule_id);
+
+
+
