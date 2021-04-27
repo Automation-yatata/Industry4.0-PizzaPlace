@@ -17,15 +17,15 @@ CREATE TABLE actuator (
 CREATE TABLE actuator_vec (
 
     date TIMESTAMP ,
-    name_act VARCHAR(45) NOT NULL,
+    name_act VARCHAR(45) ,
     state BOOLEAN NOT NULL,
     CONSTRAINT PK_act_vec PRIMARY KEY (date,name_act)
 );
 
 CREATE TABLE op_r_subr (
 
-    subrule_id SERIAL,
-    rule_id SERIAL NOT NULL,
+    subrule_id INT,
+    rule_id INT NOT NULL,
     op_between_rules VARCHAR(5),
     CONSTRAINT PK_op_r_subr PRIMARY KEY (subrule_id) 
 );
@@ -52,7 +52,7 @@ CREATE TABLE sensor_vec (
     
     date TIMESTAMP,
     value NUMERIC(3,2) NOT NULL ,
-    name_sens VARCHAR(45) NOT NULL,
+    name_sens VARCHAR(45) ,
     CONSTRAINT PK_sens_vec PRIMARY KEY (date,name_sens)
 );
 
