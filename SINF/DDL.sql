@@ -24,8 +24,8 @@ CREATE TABLE actuator_vec (
 
 CREATE TABLE op_r_subr (
 
-    subrule_id INT,
-    rule_id INT NOT NULL,
+    subrule_id SERIAL,
+    rule_id SERIAL NOT NULL,
     op_between_rules VARCHAR(5),
     CONSTRAINT PK_op_r_subr PRIMARY KEY (subrule_id) 
 );
