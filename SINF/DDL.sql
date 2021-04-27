@@ -15,7 +15,7 @@ CREATE TABLE actuator (
 
 CREATE TABLE actuator_vec (
 
-    date CURRENT_TIMESTAMP,
+    date TIMESTAMP,
     state BOOLEAN NOT NULL,
     CONSTRAINT PK_act_vec PRIMARY KEY (date,name)
 );
@@ -44,7 +44,7 @@ CREATE TABLE sensor (
 
 CREATE TABLE sensor_vec (
     
-    date CURRENT_TIMESTAMP,
+    date TIMESTAMP,
     value NUMERIC(3,2) NOT NULL ,
     CONSTRAINT PK_sens_vec PRIMARY KEY (date,name)
 );
