@@ -63,14 +63,27 @@ CREATE TABLE section(
 ALTER TABLE rule ADD CONSTRAINT FK_RuleActName
     FOREIGN KEY (name) REFERENCES actuator (name) NOT NULL;
 
-ALTER TABLE actuator_vec ADD CONSTRAINT FK_Name
+ALTER TABLE actuator_vec ADD CONSTRAINT PK_Name
     FOREIGN KEY (name) REFERENCES actuator(name);
 
-ALTER TABLE r_subr ADD CONSTRAINT FK_ruleID 
-    FOREIGN KEY (rule_id) REFERENCES rule (rule_id);
+ALTER TABLE op_r_subr CONSTRAINT PK_subruleID
+    FOREIGN KEY (subrule_id) REFERENCES (subrule);
 
-ALTER TABLE r_subr ADD CONSTRAINT FK_SubRuleID
-    FOREIGN KEY (subrule_id) REFERENCES subrule (subrule_id);
+ALTER TABLE op_r_subr CONSTRAINT FK_rule_id 
+    FOREIGN KEY (rule_id) REFERENCES (rule) NOT NULL;
+
+ALTER TABLE subrule CONSTRAINT FK_sensorName
+    FOREIGN KEY (name) REFERENCES (sensor) NOT NULL;
+
+ALTER TABLE sensor CONSTRAINT FK_moteID
+    FOREIGN KEY (mote_id) REFERENCES (mote) NOT NULL;
+
+ALTER TABLE sensor_vec CONSTRAINT PK_Name 
+    FOREIGN KEY (name) REFERENCES (sensor) NOT NULL;
+
+ALTER TABLE mote_id CONSTRAINT FK_sectionID
+    FOREIGN KEY (section_id) REFERENCES (section) NOT NULL;
+
 
 
 
