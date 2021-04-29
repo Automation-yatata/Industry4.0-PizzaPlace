@@ -74,22 +74,22 @@ ALTER TABLE rule ADD CONSTRAINT FK_RuleActName
 ALTER TABLE actuator_vec ADD CONSTRAINT FK_Name
     FOREIGN KEY (name_act) REFERENCES actuator (name);
 
-ALTER TABLE op_r_subr CONSTRAINT FK_subruleID
+ALTER TABLE op_r_subr ADD CONSTRAINT FK_subruleID
     FOREIGN KEY (subrule_id) REFERENCES subrule (subrule_id);
 
-ALTER TABLE op_r_subr CONSTRAINT FK_rule_id 
+ALTER TABLE op_r_subr ADD CONSTRAINT FK_rule_id 
     FOREIGN KEY (rule_id) REFERENCES rule (rule_id);
 
-ALTER TABLE subrule CONSTRAINT FK_sensorName
+ALTER TABLE subrule ADD CONSTRAINT FK_sensorName
     FOREIGN KEY (sensor_name) REFERENCES sensor (name);
 
-ALTER TABLE sensor CONSTRAINT FK_moteID
+ALTER TABLE sensor ADD CONSTRAINT FK_moteID
     FOREIGN KEY (mote_id) REFERENCES mote (mote_id) ;
 
-ALTER TABLE sensor_vec CONSTRAINT PK_Name 
+ALTER TABLE sensor_vec ADD CONSTRAINT PK_Name 
     FOREIGN KEY (name_sens) REFERENCES sensor (name) ;
 
-ALTER TABLE mote_id CONSTRAINT FK_sectionID
+ALTER TABLE mote_id ADD CONSTRAINT FK_sectionID
     FOREIGN KEY (section_id) REFERENCES section (section_id);
 
 
