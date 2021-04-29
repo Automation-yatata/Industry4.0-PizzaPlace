@@ -89,7 +89,7 @@ ALTER TABLE sensor ADD CONSTRAINT FK_moteID
 ALTER TABLE sensor_vec ADD CONSTRAINT PK_Name 
     FOREIGN KEY (name_sens) REFERENCES sensor (name) ;
 
-ALTER TABLE mote_id ADD CONSTRAINT FK_sectionID
+ALTER TABLE mote ADD CONSTRAINT FK_sectionID
     FOREIGN KEY (section_id) REFERENCES section (section_id);
 
 
