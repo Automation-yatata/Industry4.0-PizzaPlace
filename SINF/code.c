@@ -3,9 +3,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
+#include <postgresql/libpq-fe.h>
 
 #define MAX_CHAR 75
-#define N_MOTES 2      // motes number equals sections number
+#define N_MOTES 2       // motes number equals sections number
 #define N_SENSOR_MOTE 5 // number of sensor per mote
 #define MAX_RULES 20
 #define N_ACTUATORS 10
@@ -31,6 +32,8 @@ void print_mote(void);
 void write_2_RGB();
 void outputs_update(int n_rules);
 void measure_power(float **vec_sec, float **vec_hour, int moteID, float volt, float light, float curr, float temp, float humi);
+void establish_DB_connection(PGconn *conn , PGresult *res ,const char *dbconn);
+
 
 char str[MAX_CHAR];
 int count_sec;
@@ -162,7 +165,7 @@ void check_values(int *old_vec, int n_actuadores, int rules, int moteID)
 
     int i = 0;
 
-    while (rules_vec[i].sensor != NULL && i<rules)
+    while (rules_vec[i].sensor != NULL && i < rules)
     {
 
         //char op [2];
@@ -708,7 +711,7 @@ int load_rules(int n)
         // i related to N_MOTES
         // j related to pos[] in layout struct (whats sensor; 0(volt) etc)
         // k  related to position in RULES vector
-        sprintf(dec_to_str, "%d", i );
+        sprintf(dec_to_str, "%d", i);
         while (i <= N_MOTES)
         {
             if (strstr(token, dec_to_str) != NULL)
@@ -776,15 +779,15 @@ int load_rules(int n)
             }
             //printf("Sucess Mote:%d\n", i );
         }
-        
+
         int true_i = i;
         i = 0;
-        j=0;
+        j = 0;
 
         while (1)
         {
             // Load 1st part --> Sensor;Oper;Ref
-           // puts(subject);
+            // puts(subject);
             //puts(predicate);
             //printf("%s\n",motes[i].pos[j].name);
             //printf("STRSTR__%s\n",strstr(subject, motes[i].pos[j].name));
@@ -820,17 +823,18 @@ int load_rules(int n)
             }
             else
             {
-                if(strncmp(motes[i].pos[j+1].name,"\0",3)){
+                if (strncmp(motes[i].pos[j + 1].name, "\0", 3))
+                {
                     j++;
-                }else
+                }
+                else
                 {
                     i++;
-                    j=0;
-
+                    j = 0;
                 }
                 //printf("j:%d i:%d\n",j,i);
-                
-                if(i==N_MOTES)
+
+                if (i == N_MOTES)
                 {
                     printf("Error on detect sensor in mote %d\n", i + 1);
                     fclose(f);
@@ -859,17 +863,18 @@ int load_rules(int n)
             }
             else
             {
-                if(strncmp(motes[i].pos[j+1].name,"\0",3)){
+                if (strncmp(motes[i].pos[j + 1].name, "\0", 3))
+                {
                     j++;
-                }else
+                }
+                else
                 {
                     i++;
-                    j=0;
-
+                    j = 0;
                 }
                 //printf("j:%d i:%d\n",j,i);
-                
-                if(i==N_MOTES)
+
+                if (i == N_MOTES)
                 {
                     printf("Error on detect sensor in mote %d\n", i + 1);
                     fclose(f);
@@ -887,47 +892,47 @@ int load_rules(int n)
             if (!strncmp(outputs_vetor[j].name, "\0", 3))
                 break;
 
-                if (strstr(predicate, outputs_vetor[j].name) != NULL)
+            if (strstr(predicate, outputs_vetor[j].name) != NULL)
+            {
+                // printf("%s %s\n",predicate,outputs_vetor[j].name);
+                char *token = strtok(predicate, ":");
+                token = strtok(NULL, ":");
+                if (token == NULL)
                 {
-                   // printf("%s %s\n",predicate,outputs_vetor[j].name);
-                    char *token = strtok(predicate, ":");
-                    token = strtok(NULL, ":");
-                    if(token==NULL){
-                        break;
-                    }
-                    // If ON, then we know that when the rules is verified(rgb_matrix_write=1), we need to
-                    // turn ON the actuator
+                    break;
+                }
+                // If ON, then we know that when the rules is verified(rgb_matrix_write=1), we need to
+                // turn ON the actuator
 
-                    if (strstr(token, "ON ") != NULL)
+                if (strstr(token, "ON ") != NULL)
+                {
+                    rules_vec[k].out = &outputs_vetor[j].on;
+
+                    k++;
+                    break;
+                }
+                else
+                {
+                    // If OFF, then we know that when the rules is verified(rgb_matrix_write=1), we need to
+                    // turn OFF the actuator
+                    if (strstr(token, "OFF ") != NULL)
                     {
-                        rules_vec[k].out = &outputs_vetor[j].on;
-
+                        rules_vec[k].out = &outputs_vetor[j].off;
                         k++;
                         break;
                     }
                     else
                     {
-                        // If OFF, then we know that when the rules is verified(rgb_matrix_write=1), we need to
-                        // turn OFF the actuator
-                        if (strstr(token, "OFF ") != NULL)
-                        {
-                            rules_vec[k].out = &outputs_vetor[j].off;
-                            k++;
-                            break;
-                        }
-                        else
-                        {
-                            printf("ERROR on detect actuator!\n");
-                            fclose(f);
-                            return -1;
-                        }
+                        printf("ERROR on detect actuator!\n");
+                        fclose(f);
+                        return -1;
                     }
                 }
-                else
-                {
-                    j++;
-                }
-            
+            }
+            else
+            {
+                j++;
+            }
         }
 
         i = 0;
@@ -935,7 +940,6 @@ int load_rules(int n)
 
     i = 0;
 
-    
     /*while (i < k)
     {
         if(rules_vec[i].is_complex==0){
@@ -989,13 +993,15 @@ void write_2_RGB()
 
     FILE *f;
     f = fopen("RGBMatrixConf.txt", "w");
-    if(f==NULL){
+    if (f == NULL)
+    {
         printf("Error opening RGBMatrixConfig.txt\n");
     }
 
     FILE *fp;
     fp = fopen("matrix.txt", "w");
-    if(fp==NULL){
+    if (fp == NULL)
+    {
         printf("Error opening matrix.txt\n");
     }
 
@@ -1057,7 +1063,7 @@ void write_2_RGB()
         }
     }
 
-    if (par == 0 && celulas_matriz!=3)
+    if (par == 0 && celulas_matriz != 3)
     {
         fprintf(fp, "[");
 
@@ -1095,7 +1101,7 @@ void write_2_RGB()
         fprintf(fp, "]\n");
     }
 
-    if (celulas_matriz==3)
+    if (celulas_matriz == 3)
     {
         fprintf(fp, "[");
 
@@ -1111,18 +1117,17 @@ void write_2_RGB()
             for (int k = 0; k < 2; k++)
             {
 
-                if (strcmp(outputs_vetor[i].name, "Skipped") == 0 && (i!=celulas_matriz-1 || k==1))
+                if (strcmp(outputs_vetor[i].name, "Skipped") == 0 && (i != celulas_matriz - 1 || k == 1))
                     fprintf(fp, "%s,", BLACK);
-                else if (strcmp(outputs_vetor[i].name, "Skipped") == 0 && i==celulas_matriz-1 && k==1)
+                else if (strcmp(outputs_vetor[i].name, "Skipped") == 0 && i == celulas_matriz - 1 && k == 1)
                     fprintf(fp, "%s", BLACK);
-                
-                
-                else if (outputs_vetor[i].on == 1 && i==celulas_matriz-1 && k==1)
+
+                else if (outputs_vetor[i].on == 1 && i == celulas_matriz - 1 && k == 1)
                     fprintf(fp, "%s", GREEN);
                 else if (outputs_vetor[i].on == 1)
                     fprintf(fp, "%s,", GREEN);
-                
-                else if (outputs_vetor[i].off == 1 && i==celulas_matriz-1 && k==1)
+
+                else if (outputs_vetor[i].off == 1 && i == celulas_matriz - 1 && k == 1)
                     fprintf(fp, "%s", RED);
                 else if (outputs_vetor[i].off == 1)
                     fprintf(fp, "%s,", RED);
@@ -1137,8 +1142,10 @@ void write_2_RGB()
     {
 
         int j_limite;
-        if ((celulas_matriz/2) %2 ==0) j_limite = ((celulas_matriz - celulas_matriz / 2) / 2);
-        else j_limite= ((celulas_matriz - celulas_matriz / 2) / 2) + 1;
+        if ((celulas_matriz / 2) % 2 == 0)
+            j_limite = ((celulas_matriz - celulas_matriz / 2) / 2);
+        else
+            j_limite = ((celulas_matriz - celulas_matriz / 2) / 2) + 1;
 
         fprintf(fp, "[");
 
@@ -1426,9 +1433,47 @@ void measure_power(float **vec_sec, float **vec_hour, int moteID, float volt, fl
     }
 }
 
+void establish_DB_connection(PGconn *conn , PGresult *res ,const char *dbconn)
+{
+    
+    dbconn = "host = 'db.fe.up.pt' dbname = 'sinf2021a35' user = 'sinf2021a35' password = 'ZbnBodLV'";
+    //EXAMPLE : dbconn = "host = 'db.fe.up.pt' dbname = 'sinf1920e32' user = 'sinf1920e32' password = 'QWTTIjZl'";
+
+    conn = PQconnectdb(dbconn);
+    //PQexec(conn, "SET search_path TO testing");
+
+    if (!conn)
+    {
+        printf(stderr, "libpq error: PQconnectdb returned NULL. \n\n");
+        PQfinish(conn);
+        exit(1);
+    }
+
+    else if (PQstatus(conn) != CONNECTION_OK)
+    {
+        printf(stderr, "Connection to DB failed: %s", PQerrorMessage(conn));
+        PQfinish(conn);
+        exit(1);
+    }
+
+    else
+    {
+        printf("Connection OK \n");
+        //res = PQexec(conn, "INSERT INTO test_1920 (id, name, age) VALUES (1, 'Jane Doe', 32)");
+        PQfinish(conn);
+    }
+    return;
+}
 int main()
 {
     FILE *f_terminal;
+
+    PGconn *conn;
+    PGresult *res;
+    const char *dbconn;
+
+    establish_DB_connection(conn,res,dbconn);
+    return 0;
 
     int n_atuadores = load_sensorconfig();
     time(&old);
