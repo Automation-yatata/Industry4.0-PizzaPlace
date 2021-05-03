@@ -613,12 +613,16 @@ int load_sensorconfig(void)
         {
             //printf("%s\n", line);
             token = strtok(line, ":");
-            sprintf(dec_to_str, "%d", i + 1);
+            //sprintf(dec_to_str, "%d", i + 1);
+            strcpy(dec_to_str,&token[strlen(token)-1]);
+            char insert_tb_section[3];
             
-            //DB INSERT
-            
+            //DB INSERT table: SECTION
             // Só insere se for nao existir
-            insert_values(conn,"section","section_id",dec_to_str);
+
+            strcpy(insert_tb_section,dec_to_str);
+            printf("SECTION %s\n",insert_tb_section);
+            //insert_values(conn,"section","___section_id___",insert_tb_section);
             ///////
 
             while (1)
@@ -633,16 +637,53 @@ int load_sensorconfig(void)
 
                     break;
                 }
-                else
+                /*else
                 {
+                    printf("ENTROU");
                     i++;
                     sprintf(dec_to_str, "%d", i + 1);
-                }
+                }*/
             }
             // write inputs on mote[]
             token = strtok(inputs, ",");
+
+            // Check mote_id
+            char insert_tb_mote[5];
+
+            strcpy(insert_tb_mote, &token[strlen(token)-1]);
+            //printf("%s\n",insert_tb_mote);
+            strcat(insert_tb_mote,"|");
+            strcat(insert_tb_mote,insert_tb_section);
+            printf("MOTE  %s\n",insert_tb_mote);
+
+
+            //DB INSERT table: MOTE
+            // Só insere se nao existir
+            
+            //insert_values(conn,"mote","mote_id,section_id",insert_tb_mote);
+
+            char mote_id[2];
+            strncpy(mote_id,insert_tb_mote,1);
+            mote_id[1]='\0';
+            
             while (token != NULL)
             {
+                // DB INSERT table: SENSOR
+                // Só insere se nao existir
+
+                char insert_tb_sensor[50];
+                
+                
+               
+
+                strcpy(insert_tb_sensor,token);
+                strcat(insert_tb_sensor,"|");
+                strcat(insert_tb_sensor,mote_id);
+                strcat(insert_tb_sensor,"|");
+                strcat(insert_tb_sensor,"0");
+                printf("SENSOR %s\n",insert_tb_sensor);
+                //insert_values(conn,"sensor","name,mote_id,actual_value",insert_tb_sensor);
+
                 strcpy(motes[i].pos[j].name, token);
                 j++;
                 token = strtok(NULL, ",");
@@ -652,8 +693,23 @@ int load_sensorconfig(void)
             // write outputs on outputs_vector[]
             token = strtok(outputs, ",");
 
+            
+
             while (token != NULL && cnt < N_ACTUATORS)
             {
+                
+                // DB INSERT table: ACTUATOR
+                // Só insere se nao existir
+
+                char insert_tb_actuator[50];
+
+                strcpy(insert_tb_actuator,token);
+                strcat(insert_tb_actuator,"|");
+                strcat(insert_tb_actuator,mote_id);
+                strcat(insert_tb_actuator,"|");
+                strcat(insert_tb_actuator,"0");
+                printf("ACTUATOR %s\n",insert_tb_actuator);
+                //insert_values(conn,"actuator","name,mote_id,actual_state",insert_tb_actuator);
 
                 strcpy(outputs_vetor[cnt].name, token);
                 cnt++;
@@ -666,6 +722,7 @@ int load_sensorconfig(void)
             //printf("\n");
             break;
         }
+
     }
 
     fclose(f);
@@ -1449,7 +1506,7 @@ void measure_power(float **vec_sec, float **vec_hour, int moteID, float volt, fl
         return;
     }
 }
-
+/*
 void establish_DB_connection(PGconn *conn , PGresult *res ,const char *dbconn)
 {
     
@@ -1481,20 +1538,22 @@ void establish_DB_connection(PGconn *conn , PGresult *res ,const char *dbconn)
     }
     return;
 }
+*/
 
+/*
 void insert_values (PGconn *conn, char *table_name, char *column_names , char *values)
 {
 
     char columns[10][10];
     ////////////////
-    /*
+    
     char exe_columns = "SELECT COLUMN_NAME 
                 FROM INFORMATION_SCHEMA.COLUMNS
                 WHERE TABLE_NAME = "
     strcat(exe_columns,table_name);
 
     PQexec(conn, exe_columns);
-    */
+    
     /////////////////
     char *token;
     token = strtok (column_names, "|");
@@ -1633,15 +1692,16 @@ void update_values (PGconn *conn, char *table_name, char *PRIMARY_KEY, int id, c
     
 }
 
-
+*/
 int main()
 {
     FILE *f_terminal;
 
-    establish_DB_connection(conn,res,dbconn);
+    //establish_DB_connection(conn,res,dbconn);
     
 
     int n_atuadores = load_sensorconfig();
+    return 0;
     time(&old);
     //check_OK();
     int rules_number = load_rules(n_atuadores);

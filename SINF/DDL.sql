@@ -61,8 +61,6 @@ CREATE TABLE sensor_vec (
     CONSTRAINT PK_sens_vec PRIMARY KEY (date,name_sens)
 );
 
-
-
 CREATE TABLE actuator_vec (
 
     date TIMESTAMP ,
