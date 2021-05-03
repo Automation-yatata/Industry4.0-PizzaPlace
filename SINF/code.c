@@ -45,6 +45,12 @@ int count_hour;
 
 time_t old, atual;
 
+
+PGconn *conn;
+PGresult *res;
+const char *dbconn;
+
+
 typedef struct
 {
 
@@ -608,6 +614,12 @@ int load_sensorconfig(void)
             //printf("%s\n", line);
             token = strtok(line, ":");
             sprintf(dec_to_str, "%d", i + 1);
+            
+            //DB INSERT
+            
+            // Só insere se for nao existir
+            insert_values(conn,"section","section_id",dec_to_str);
+            ///////
 
             while (1)
             {
@@ -1473,7 +1485,7 @@ void establish_DB_connection(PGconn *conn , PGresult *res ,const char *dbconn)
 void insert_values (PGconn *conn, char *table_name, char *column_names , char *values)
 {
 
-    char columns = [10][10];
+    char columns[10][10];
     ////////////////
     /*
     char exe_columns = "SELECT COLUMN_NAME 
@@ -1484,13 +1496,13 @@ void insert_values (PGconn *conn, char *table_name, char *column_names , char *v
     PQexec(conn, exe_columns);
     */
     /////////////////
-
+    char *token;
     token = strtok (column_names, "|");
     int i = 0;
     while(token != NULL)
     {
         printf("%s\n",token);
-        strcpy(columns[i], token)
+        strcpy(columns[i], token);
         token = strtok (NULL, "|");
         i++;
     }
@@ -1565,15 +1577,15 @@ void drop_all (PGconn *conn)
 
 
     char table_names [10][15];
-    table_names [0]="SENSOR_VEC";
-    table_names [1]="SECTION";
-    table_names [2]="MOTE";
-    table_names [3]="SENSOR";
-    table_names [4]="SUBRULE";
-    table_names [5]="OP_R_SUBR";
-    table_names [6]="RULE";
-    table_names [7]="ACTUATOR";
-    table_names [8]="ACTUATOR_VEC";
+    strcpy(table_names [0],"SENSOR_VEC");
+    strcpy(table_names [1],"SECTION");
+    strcpy(table_names [2],"MOTE");
+    strcpy(table_names [3],"SENSOR");
+    strcpy(table_names [4],"SUBRULE");
+    strcpy(table_names [5],"OP_R_SUBR");
+    strcpy(table_names [6],"RULE");
+    strcpy(table_names [7],"ACTUATOR");
+    strcpy(table_names [8],"ACTUATOR_VEC");
     
 
     int i = 0;
@@ -1626,12 +1638,8 @@ int main()
 {
     FILE *f_terminal;
 
-    PGconn *conn;
-    PGresult *res;
-    const char *dbconn;
-
     establish_DB_connection(conn,res,dbconn);
-    return 0;
+    
 
     int n_atuadores = load_sensorconfig();
     time(&old);
