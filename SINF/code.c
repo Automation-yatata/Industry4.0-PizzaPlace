@@ -32,12 +32,12 @@ void print_mote(void);
 void write_2_RGB();
 void outputs_update(int n_rules);
 void measure_power(float **vec_sec, float **vec_hour, int moteID, float volt, float light, float curr, float temp, float humi);
-void establish_DB_connection(PGconn *conn , PGresult *res ,const char *dbconn);
+/*void establish_DB_connection(PGconn *conn , PGresult *res ,const char *dbconn);
 void insert_values (PGconn *conn, char *database_name, char *column_names, char *values);
 void delete_values (PGconn *conn, char *database_name, char *PRIMARY_KEY, int id);
 void drop_all (PGconn *conn);
 void update_values (PGconn *conn, char *table_name, char *PRIMARY_KEY, int id, char *column, float value);
-
+*/
 
 char str[MAX_CHAR];
 int count_sec;
@@ -46,10 +46,10 @@ int count_hour;
 time_t old, atual;
 
 
-PGconn *conn;
+/*PGconn *conn;
 PGresult *res;
 const char *dbconn;
-
+*/
 
 typedef struct
 {
@@ -621,7 +621,7 @@ int load_sensorconfig(void)
             // Só insere se for nao existir
 
             strcpy(insert_tb_section,dec_to_str);
-            printf("SECTION %s\n",insert_tb_section);
+            //printf("SECTION %s\n",insert_tb_section);
             //insert_values(conn,"section","___section_id___",insert_tb_section);
             ///////
 
@@ -644,6 +644,9 @@ int load_sensorconfig(void)
                     sprintf(dec_to_str, "%d", i + 1);
                 }*/
             }
+
+            puts(inputs);puts(outputs);
+
             // write inputs on mote[]
             token = strtok(inputs, ",");
 
@@ -654,7 +657,7 @@ int load_sensorconfig(void)
             //printf("%s\n",insert_tb_mote);
             strcat(insert_tb_mote,"|");
             strcat(insert_tb_mote,insert_tb_section);
-            printf("MOTE  %s\n",insert_tb_mote);
+            //printf("MOTE  %s\n",insert_tb_mote);
 
 
             //DB INSERT table: MOTE
@@ -665,7 +668,7 @@ int load_sensorconfig(void)
             char mote_id[2];
             strncpy(mote_id,insert_tb_mote,1);
             mote_id[1]='\0';
-            
+            i=atoi(insert_tb_section)-1;
             while (token != NULL)
             {
                 // DB INSERT table: SENSOR
@@ -673,18 +676,16 @@ int load_sensorconfig(void)
 
                 char insert_tb_sensor[50];
                 
-                
-               
-
                 strcpy(insert_tb_sensor,token);
                 strcat(insert_tb_sensor,"|");
                 strcat(insert_tb_sensor,mote_id);
                 strcat(insert_tb_sensor,"|");
                 strcat(insert_tb_sensor,"0");
-                printf("SENSOR %s\n",insert_tb_sensor);
+                //printf("SENSOR %s\n",insert_tb_sensor);
                 //insert_values(conn,"sensor","name,mote_id,actual_value",insert_tb_sensor);
-
+                printf("sensor:%s  valor de i:%d\n",token,i);
                 strcpy(motes[i].pos[j].name, token);
+                printf("teste:%s\n",motes[i].pos[j].name);
                 j++;
                 token = strtok(NULL, ",");
             }
@@ -708,7 +709,7 @@ int load_sensorconfig(void)
                 strcat(insert_tb_actuator,mote_id);
                 strcat(insert_tb_actuator,"|");
                 strcat(insert_tb_actuator,"0");
-                printf("ACTUATOR %s\n",insert_tb_actuator);
+                //printf("ACTUATOR %s\n",insert_tb_actuator);
                 //insert_values(conn,"actuator","name,mote_id,actual_state",insert_tb_actuator);
 
                 strcpy(outputs_vetor[cnt].name, token);
@@ -718,7 +719,7 @@ int load_sensorconfig(void)
         }
         else
         {
-            //check_OK();
+            check_OK();
             //printf("\n");
             break;
         }
@@ -786,12 +787,15 @@ int load_rules(int n)
         // j related to pos[] in layout struct (whats sensor; 0(volt) etc)
         // k  related to position in RULES vector
         sprintf(dec_to_str, "%d", i);
+        printf("://%s\n", dec_to_str);
+
         while (i <= N_MOTES)
         {
             if (strstr(token, dec_to_str) != NULL)
             {
-
+                printf("token %s\n",token);
                 token = strtok(NULL, " ");
+                printf("token %s\n",token);
 
                 if (strcpy(subject, token) == NULL)
                 {
@@ -814,7 +818,7 @@ int load_rules(int n)
                         fclose(f);
                         return -1;
                     }
-
+                    puts(subject);puts(predicate);
                     break;
                 }
                 else
@@ -841,14 +845,16 @@ int load_rules(int n)
                         return -1;
                     }
 
-                    //puts(subject);printf("AND?%d\n",is_and);puts(subject2);puts(predicate);
+                    puts(subject);printf("AND?%d\n",is_and);puts(subject2);puts(predicate);
                     break;
                 }
             }
             else
             {
-
+                printf("ENTROU\n");
+                printf("i value:%d\n",i);
                 i++;
+                dec_to_str[0]='\0';
                 sprintf(dec_to_str, "%d", i);
             }
             //printf("Sucess Mote:%d\n", i );
@@ -1009,12 +1015,12 @@ int load_rules(int n)
             }
         }
 
-        i = 0;
+        i = 1;
     }
 
     i = 0;
 
-    /*while (i < k)
+    while (i < k)
     {
         if(rules_vec[i].is_complex==0){
         printf("%s_%c_%d || Actuator ON|OFF %d\n", rules_vec[i].sensor->name,
@@ -1027,7 +1033,7 @@ int load_rules(int n)
                rules_vec[i].operation2, rules_vec[i].ref2, *rules_vec[i].out);
             i++;
         }
-    }*/
+    }
     fclose(f);
     return k;
 }
@@ -1514,7 +1520,7 @@ void establish_DB_connection(PGconn *conn , PGresult *res ,const char *dbconn)
     //EXAMPLE : dbconn = "host = 'db.fe.up.pt' dbname = 'sinf1920e32' user = 'sinf1920e32' password = 'QWTTIjZl'";
 
     conn = PQconnectdb(dbconn);
-    //PQexec(conn, "SET search_path TO testing");
+    //PQexec(conn, "SET search_path TO gman_a35");
 
     if (!conn)
     {
@@ -1701,10 +1707,11 @@ int main()
     
 
     int n_atuadores = load_sensorconfig();
-    return 0;
+    
     time(&old);
     //check_OK();
     int rules_number = load_rules(n_atuadores);
+    return 0;
     int moteID;
     float voltage, light, current, temperature, rel_humidity, humidity_temp;
 
