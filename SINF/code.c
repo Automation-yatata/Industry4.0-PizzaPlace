@@ -804,6 +804,7 @@ int load_rules(int n)
                     fclose(f);
                     return -1;
                 }
+
                 //puts(token);
 
                 if (is_and == 0 && is_or == 0)
@@ -826,7 +827,13 @@ int load_rules(int n)
                 {
 
                     token = strtok(NULL, " ");
+
+                    //puts(token);
+
+
                     token = strtok(NULL, " ");
+
+                    //puts(token);
 
                     if (strcpy(subject2, token) == NULL)
                     {
@@ -838,6 +845,8 @@ int load_rules(int n)
 
                     token = strtok(NULL, "\0");
 
+                    //puts(token);
+
                     if (strcpy(predicate, token) == NULL)
                     {
 
@@ -846,7 +855,27 @@ int load_rules(int n)
                         return -1;
                     }
 
-                    puts(subject);printf("AND?%d\n",is_and);puts(subject2);puts(predicate);
+                    //puts(subject);
+                    //printf("AND?%d\n",is_and);
+                        char Op_between_rules[4];
+                        if(is_and==1) strcpy(Op_between_rules, "AND");
+                        else if (is_and==0) strcpy(Op_between_rules, "OR");
+
+                        char insert_tb_op_r_subr[50];
+
+                        strcpy(insert_tb_op_r_subr, "DEFAULT");
+                        strcat(insert_tb_op_r_subr, "|");
+                        strcat(insert_tb_op_r_subr, Op_between_rules);
+                        strcat(insert_tb_op_r_subr, "|");
+                        strcat(insert_tb_op_r_subr, "DEFAULT");
+                        strcat(insert_tb_op_r_subr, "|");
+                        strcat(insert_tb_op_r_subr, "0");
+
+                        //insert_values(conn,"op_r_subr","subrule_id,op_between_rules,rule_id",insert_tb_op_r_subr);
+
+
+                    //puts(subject2);
+                    //puts(predicate);
                     break;
                 }
             }
@@ -868,7 +897,7 @@ int load_rules(int n)
         while (1)
         {
             // Load 1st part --> Sensor;Oper;Ref
-            // puts(subject);
+            //puts(subject);
             //puts(predicate);
             //printf("%s\n",motes[i].pos[j].name);
             //printf("STRSTR__%s\n",strstr(subject, motes[i].pos[j].name));
@@ -878,7 +907,32 @@ int load_rules(int n)
                 rules_vec[k].sensor = &motes[i].pos[j];
                 rules_vec[k].operation = subject[strlen(motes[i].pos[j].name)];
                 //printf("%c\n", rules_vec[k].operation);
+                    char operation1[2];
+                    strcpy(operation1, &rules_vec[k].operation);
+                    //printf("%d\n", rules_vec[k].ref);
                 sscanf(&subject[strlen(motes[i].pos[j].name) + 1], "%d", &rules_vec[k].ref);
+                //printf("%d\n", rules_vec[k].ref);
+                printf("%s\n", motes[i].pos[j].name);
+
+                    char ref_value1[4];
+                    sprintf(ref_value1, "%d", rules_vec[k].ref);
+
+                    char SENSOR_NAME1[7];
+                    strcpy(SENSOR_NAME1, motes[i].pos[j].name);
+
+
+                    char insert_tb_subrule[50];
+                    strcpy(insert_tb_subrule, "DEFAULT");
+                    strcat(insert_tb_subrule, "|");
+                    strcat(insert_tb_subrule, operation1);
+                    strcat(insert_tb_subrule, "|");
+                    strcat(insert_tb_subrule, ref_value1);
+                    strcat(insert_tb_subrule, "|");
+                    strcat(insert_tb_subrule, SENSOR_NAME1);
+                    strcat(insert_tb_subrule, "|");
+                    strcat(insert_tb_subrule, "0");
+
+                    //insert_values(conn,"subrule","subrule_id,operation,ref_value,name",insert_tb_subrule);
 
                 if (is_and == 1 || is_or == 1)
                 {
@@ -939,7 +993,30 @@ int load_rules(int n)
                 rules_vec[k].sensor2 = &motes[i].pos[j];
                 rules_vec[k].operation2 = subject2[strlen(motes[i].pos[j].name)];
                 //printf("%c\n", rules_vec[k].operation2);
+                    char operation2[2];
+                    strcpy(operation2, &rules_vec[k].operation2);
+
                 sscanf(&subject2[strlen(motes[i].pos[j].name) + 1], "%d", &rules_vec[k].ref2);
+
+                char ref_value2[4];
+                    sprintf(ref_value2, "%d", rules_vec[k].ref2);
+
+                    char SENSOR_NAME2[7];
+                    strcpy(SENSOR_NAME2, motes[i].pos[j].name);
+
+
+                    char insert_tb_subrule[50];
+                    strcpy(insert_tb_subrule, "DEFAULT");
+                    strcat(insert_tb_subrule, "|");
+                    strcat(insert_tb_subrule, operation2);
+                    strcat(insert_tb_subrule, "|");
+                    strcat(insert_tb_subrule, ref_value2);
+                    strcat(insert_tb_subrule, "|");
+                    strcat(insert_tb_subrule, SENSOR_NAME2);
+                    strcat(insert_tb_subrule, "|");
+                    strcat(insert_tb_subrule, "0");
+
+                    //insert_values(conn,"subrule","subrule_id,operation,ref_value,name",insert_tb_subrule);
                 break;
             }
             else
@@ -975,9 +1052,25 @@ int load_rules(int n)
 
             if (strstr(predicate, outputs_vetor[j].name) != NULL)
             {
-                // printf("%s %s\n",predicate,outputs_vetor[j].name);
+                 //printf("%s\n",predicate);
+                 //printf("%s\n",outputs_vetor[j].name);
+                    char ACTUATOR_NAME[20];
+                    strcpy(ACTUATOR_NAME, outputs_vetor[j].name);
+
+                    char insert_tb_rule[50];
+
+                    strcpy(insert_tb_rule, "DEFAULT");
+                    strcat(insert_tb_rule, "|");
+                    strcat(insert_tb_rule, "0");
+
+                    //insert_values(conn,"rule","rule_id,name",insert_tb_rule);
+
+
                 char *token = strtok(predicate, ":");
+
+                //puts(token);
                 token = strtok(NULL, ":");
+                //puts(token);
                 if (token == NULL)
                 {
                     break;
