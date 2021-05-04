@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
-#include <postgrsql/libpq-fe.h>
+#include <libpq-fe.h>
 
 
 #define MAX_CHAR 75
@@ -34,8 +34,8 @@ void write_2_RGB();
 void outputs_update(int n_rules);
 void measure_power(float **vec_sec, float **vec_hour, int moteID, float volt, float light, float curr, float temp, float humi);
 void establish_DB_connection(PGconn *conn , PGresult *res ,const char *dbconn);
-/*void insert_values (PGconn *conn, char *database_name, char *column_names, char *values);
-void delete_values (PGconn *conn, char *database_name, char *PRIMARY_KEY, int id);
+int insert_values (char *database_name, char *values);
+/*void delete_values (PGconn *conn, char *database_name, char *PRIMARY_KEY, int id);
 void drop_all (PGconn *conn);
 void update_values (PGconn *conn, char *table_name, char *PRIMARY_KEY, int id, char *column, float value);
 */
@@ -623,7 +623,9 @@ int load_sensorconfig(void)
 
             strcpy(insert_tb_section,dec_to_str);
             //printf("SECTION %s\n",insert_tb_section);
-            //insert_values(conn,"section","___section_id___",insert_tb_section);
+            //insert_values("section",insert_tb_section);
+
+
             ///////
 
             while (1)
@@ -676,8 +678,9 @@ int load_sensorconfig(void)
                 // Só insere se nao existir
 
                 char insert_tb_sensor[50];
-                
-                strcpy(insert_tb_sensor,token);
+                strcpy(insert_tb_sensor,"'");
+                strcat(insert_tb_sensor,token);
+                strcat(insert_tb_sensor,"'");
                 strcat(insert_tb_sensor,"|");
                 strcat(insert_tb_sensor,mote_id);
                 strcat(insert_tb_sensor,"|");
@@ -1614,7 +1617,7 @@ void establish_DB_connection(PGconn *conn , PGresult *res ,const char *dbconn)
     //EXAMPLE : dbconn = "host = 'db.fe.up.pt' dbname = 'sinf1920e32' user = 'sinf1920e32' password = 'QWTTIjZl'";
 
     conn = PQconnectdb(dbconn);
-    //PQexec(conn, "SET search_path TO gman_a35");
+    PQexec(conn, "SET search_path TO gman_a35,public");
 
     if (!conn)
     {
@@ -1633,30 +1636,34 @@ void establish_DB_connection(PGconn *conn , PGresult *res ,const char *dbconn)
     else
     {
         printf("Connection OK \n");
-        //res = PQexec(conn, "INSERT INTO test_1920 (id, name, age) VALUES (1, 'Jane Doe', 32)");
-        PQfinish(conn);
+        //res = PQexec(conn, "INSERT INTO mote  VALUES (1,1)");
+        //if( PQresultStatus(res) == PGRES_COMMAND_OK) 
+        //    printf("Resultou\n");
+        
+        //PQfinish(conn);
     }
     return;
 }
 
 
-/*
-void insert_values (PGconn *conn, char *table_name, char *column_names , char *values)
+
+int insert_values (char *table_name, char *values)
 {
 
     char columns[10][10];
     ////////////////
-    
+    /*
     char exe_columns = "SELECT COLUMN_NAME 
                 FROM INFORMATION_SCHEMA.COLUMNS
                 WHERE TABLE_NAME = "
     strcat(exe_columns,table_name);
 
     PQexec(conn, exe_columns);
-    
+    */
     /////////////////
     char *token;
-    token = strtok (column_names, "|");
+    
+    /*token = strtok (column_names, "|");
     int i = 0;
     while(token != NULL)
     {
@@ -1667,13 +1674,14 @@ void insert_values (PGconn *conn, char *table_name, char *column_names , char *v
     }
 
 
-
+    */
     char execution [100] = "INSERT INTO ";
     strcat(execution, table_name);
-    strcat(execution, " (");
+    printf("%s\n",execution);
+    //strcat(execution, " (");
 
-    i = 0;
-    while(columns[i]!= NULL){
+    int i = 0;
+    /*while(columns[i]!= NULL){
 
         strcat(execution, columns[i]);
 
@@ -1681,31 +1689,39 @@ void insert_values (PGconn *conn, char *table_name, char *column_names , char *v
             strcat(execution, ",");
         }   
         i++;
-    }
-    strcat(execution, ") ");
-    strcat(execution, "VALUES (");
+    }*/
+    //strcat(execution, ") ");
+    strcat(execution, " VALUES (");
+    printf("%s\n",execution);
 
 
 
     token = strtok (values, "|");
+    
     while(token != NULL)
     {
-        printf("%s\n",token);
-        strcat(execution, ",");
+        
+        strcat(execution,token);
+        printf("%s\n",execution);
+        //printf("%s\n",token);
         token = strtok (NULL, "|");
+         if (token!=NULL){
+             strcat(execution, ",");
+         }
     }
 
-    strcat(execution, ")");
+    strcat(execution, ");");
+    printf("%s\n",execution);
 
     //(name, age) VALUES (“Anna”, 22)
 
 
-    PGresult *res = PQexec(conn, execution);
+    res = PQexec(conn, execution);
 
     return PQresultStatus(res) == PGRES_COMMAND_OK;
 
 }
-
+/*
 void delete_values (PGconn *conn, char *table_name, char *PRIMARY_KEY, int id)
 {
     //"DELETE FROM employee WHERE id = "
@@ -1798,14 +1814,16 @@ int main()
     FILE *f_terminal;
 
     establish_DB_connection(conn,res,dbconn);
-    
+    insert_values("section","1");
+    PQfinish(conn);
+    return 0;
 
     int n_atuadores = load_sensorconfig();
     
     time(&old);
     //check_OK();
     int rules_number = load_rules(n_atuadores);
-    return 0;
+    
     int moteID;
     float voltage, light, current, temperature, rel_humidity, humidity_temp;
 
