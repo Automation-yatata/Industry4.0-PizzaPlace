@@ -3,7 +3,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
-#include <libpq-fe.h>
+#include <postgrsql/libpq-fe.h>
+
 
 #define MAX_CHAR 75
 #define N_MOTES 2       // motes number equals sections number
