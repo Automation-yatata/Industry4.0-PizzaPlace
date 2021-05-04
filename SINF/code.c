@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
-#include <postgresql/libpq-fe.h>
+#include <libpq-fe.h>
 
 #define MAX_CHAR 75
 #define N_MOTES 2       // motes number equals sections number
@@ -32,8 +32,8 @@ void print_mote(void);
 void write_2_RGB();
 void outputs_update(int n_rules);
 void measure_power(float **vec_sec, float **vec_hour, int moteID, float volt, float light, float curr, float temp, float humi);
-/*void establish_DB_connection(PGconn *conn , PGresult *res ,const char *dbconn);
-void insert_values (PGconn *conn, char *database_name, char *column_names, char *values);
+void establish_DB_connection(PGconn *conn , PGresult *res ,const char *dbconn);
+/*void insert_values (PGconn *conn, char *database_name, char *column_names, char *values);
 void delete_values (PGconn *conn, char *database_name, char *PRIMARY_KEY, int id);
 void drop_all (PGconn *conn);
 void update_values (PGconn *conn, char *table_name, char *PRIMARY_KEY, int id, char *column, float value);
@@ -46,10 +46,10 @@ int count_hour;
 time_t old, atual;
 
 
-/*PGconn *conn;
+PGconn *conn;
 PGresult *res;
 const char *dbconn;
-*/
+
 
 typedef struct
 {
@@ -1512,7 +1512,7 @@ void measure_power(float **vec_sec, float **vec_hour, int moteID, float volt, fl
         return;
     }
 }
-/*
+
 void establish_DB_connection(PGconn *conn , PGresult *res ,const char *dbconn)
 {
     
@@ -1524,14 +1524,14 @@ void establish_DB_connection(PGconn *conn , PGresult *res ,const char *dbconn)
 
     if (!conn)
     {
-        printf(stderr, "libpq error: PQconnectdb returned NULL. \n\n");
+        printf( "libpq error: PQconnectdb returned NULL. \n\n");
         PQfinish(conn);
         exit(1);
     }
 
     else if (PQstatus(conn) != CONNECTION_OK)
     {
-        printf(stderr, "Connection to DB failed: %s", PQerrorMessage(conn));
+        printf( "Connection to DB failed: %s", PQerrorMessage(conn));
         PQfinish(conn);
         exit(1);
     }
@@ -1544,7 +1544,7 @@ void establish_DB_connection(PGconn *conn , PGresult *res ,const char *dbconn)
     }
     return;
 }
-*/
+
 
 /*
 void insert_values (PGconn *conn, char *table_name, char *column_names , char *values)
@@ -1703,7 +1703,7 @@ int main()
 {
     FILE *f_terminal;
 
-    //establish_DB_connection(conn,res,dbconn);
+    establish_DB_connection(conn,res,dbconn);
     
 
     int n_atuadores = load_sensorconfig();
