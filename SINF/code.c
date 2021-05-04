@@ -16,7 +16,11 @@
 #define GREEN "[0,254,0]"
 #define RED "[254,0,0]"
 #define BLACK "[0,0,0]"
-#define WHITE "[255,255,255]"
+#define WHITE "[255,255,255]"\
+
+PGconn *conn;
+PGresult *res;
+const char *dbconn;
 
 long get_num_dec(int pos);
 int check_message_start(void);
@@ -34,7 +38,7 @@ void write_2_RGB();
 void outputs_update(int n_rules);
 void measure_power(float **vec_sec, float **vec_hour, int moteID, float volt, float light, float curr, float temp, float humi);
 void establish_DB_connection(PGconn *conn , PGresult *res ,const char *dbconn);
-int insert_values (char *database_name, char *values);
+int insert_values (char *table_name, char *values);
 /*void delete_values (PGconn *conn, char *database_name, char *PRIMARY_KEY, int id);
 void drop_all (PGconn *conn);
 void update_values (PGconn *conn, char *table_name, char *PRIMARY_KEY, int id, char *column, float value);
@@ -45,12 +49,6 @@ int count_sec;
 int count_hour;
 
 time_t old, atual;
-
-
-PGconn *conn;
-PGresult *res;
-const char *dbconn;
-
 
 typedef struct
 {
@@ -596,6 +594,7 @@ int load_sensorconfig(void)
 
     char line[2 * MAX_CHAR];
     char *token;
+    char *identifier1;
     char dec_to_str[3];
     char inputs[MAX_CHAR];
     char outputs[MAX_CHAR];
@@ -613,7 +612,7 @@ int load_sensorconfig(void)
         if (fgets(line, 2 * MAX_CHAR, f) != NULL)
         {
             //printf("%s\n", line);
-            token = strtok(line, ":");
+            token = strtok_r(line, ":",&identifier1);
             //sprintf(dec_to_str, "%d", i + 1);
             strcpy(dec_to_str,&token[strlen(token)-1]);
             char insert_tb_section[3];
@@ -623,16 +622,24 @@ int load_sensorconfig(void)
 
             strcpy(insert_tb_section,dec_to_str);
             //printf("SECTION %s\n",insert_tb_section);
-            //insert_values("section",insert_tb_section);
+            insert_values("section",insert_tb_section);
+            //printf("INSERIU SECTION\n");
+
+            token = strtok_r(NULL, ":",&identifier1);
+            //printf("tok:%s\n",token);
+            strcpy(inputs, token);
+            token = strtok_r(NULL, "\n",&identifier1);
+            //printf("tok2%s\n",token);
+            strcpy(outputs, token);
 
 
-            ///////
-
-            while (1)
+            /*while (1)
             {
+                
                 if (strstr(token, dec_to_str) != NULL)
                 {
                     token = strtok(NULL, ":");
+                    printf("tok:%s\n",token);
                     strcpy(inputs, token);
 
                     token = strtok(NULL, "\n");
@@ -640,18 +647,18 @@ int load_sensorconfig(void)
 
                     break;
                 }
-                /*else
+                else
                 {
                     printf("ENTROU");
                     i++;
                     sprintf(dec_to_str, "%d", i + 1);
-                }*/
-            }
+                }
+            }*/
 
-            puts(inputs);puts(outputs);
+            //puts(inputs);puts(outputs);
 
             // write inputs on mote[]
-            token = strtok(inputs, ",");
+            token = strtok_r(inputs, ",",&identifier1);
 
             // Check mote_id
             char insert_tb_mote[5];
@@ -666,18 +673,22 @@ int load_sensorconfig(void)
             //DB INSERT table: MOTE
             // Só insere se nao existir
             
-            //insert_values(conn,"mote","mote_id,section_id",insert_tb_mote);
+            insert_values("mote",insert_tb_mote);
+            //printf("INSERIU MOTE\n");
 
             char mote_id[2];
             strncpy(mote_id,insert_tb_mote,1);
             mote_id[1]='\0';
             i=atoi(insert_tb_section)-1;
+
+            char insert_tb_sensor[50];
+
             while (token != NULL)
             {
                 // DB INSERT table: SENSOR
                 // Só insere se nao existir
-
-                char insert_tb_sensor[50];
+                printf("sensors_token:%s\n",token);
+                
                 strcpy(insert_tb_sensor,"'");
                 strcat(insert_tb_sensor,token);
                 strcat(insert_tb_sensor,"'");
@@ -686,17 +697,20 @@ int load_sensorconfig(void)
                 strcat(insert_tb_sensor,"|");
                 strcat(insert_tb_sensor,"0");
                 //printf("SENSOR %s\n",insert_tb_sensor);
-                //insert_values(conn,"sensor","name,mote_id,actual_value",insert_tb_sensor);
-                printf("sensor:%s  valor de i:%d\n",token,i);
+                insert_values("sensor",insert_tb_sensor);
+                printf("INSERIU SENSOR\n");
+                printf("\n");
+                //printf("sensor:%s  valor de i:%d\n",token,i);
                 strcpy(motes[i].pos[j].name, token);
-                printf("teste:%s\n",motes[i].pos[j].name);
+                //printf("teste:%s\n",motes[i].pos[j].name);
                 j++;
-                token = strtok(NULL, ",");
+                token = strtok_r(NULL, ",",&identifier1);
+                printf("tokk:%s\n",token);
             }
             j = 0;
 
             // write outputs on outputs_vector[]
-            token = strtok(outputs, ",");
+            token = strtok_r(outputs, ",",&identifier1);
 
             
 
@@ -708,22 +722,23 @@ int load_sensorconfig(void)
 
                 char insert_tb_actuator[50];
 
-                strcpy(insert_tb_actuator,token);
+                strcpy(insert_tb_actuator,"'");
+                strcat(insert_tb_actuator,token);
+                strcat(insert_tb_actuator,"'");
                 strcat(insert_tb_actuator,"|");
-                strcat(insert_tb_actuator,mote_id);
-                strcat(insert_tb_actuator,"|");
-                strcat(insert_tb_actuator,"0");
-                //printf("ACTUATOR %s\n",insert_tb_actuator);
-                //insert_values(conn,"actuator","name,mote_id,actual_state",insert_tb_actuator);
+                strcat(insert_tb_actuator,"FALSE");
+                printf("ACTUATOR %s\n",insert_tb_actuator);
+                insert_values("actuator",insert_tb_actuator);
+                printf("INSERIU ACTUADOR\n");
 
                 strcpy(outputs_vetor[cnt].name, token);
                 cnt++;
-                token = strtok(NULL, ",");
+                token = strtok_r(NULL, ",",&identifier1);
             }
         }
         else
         {
-            check_OK();
+            //check_OK();
             //printf("\n");
             break;
         }
@@ -1610,7 +1625,7 @@ void measure_power(float **vec_sec, float **vec_hour, int moteID, float volt, fl
     }
 }
 
-void establish_DB_connection(PGconn *conn , PGresult *res ,const char *dbconn)
+/*void establish_DB_connection(PGconn *conn , PGresult *res ,const char *dbconn)
 {
     
     dbconn = "host = 'db.fe.up.pt' dbname = 'sinf2021a35' user = 'sinf2021a35' password = 'ZbnBodLV'";
@@ -1636,16 +1651,14 @@ void establish_DB_connection(PGconn *conn , PGresult *res ,const char *dbconn)
     else
     {
         printf("Connection OK \n");
-        //res = PQexec(conn, "INSERT INTO mote  VALUES (1,1)");
-        //if( PQresultStatus(res) == PGRES_COMMAND_OK) 
-        //    printf("Resultou\n");
+        res = PQexec(conn, "INSERT INTO section VALUES (1)");
+        if( PQresultStatus(res) == PGRES_COMMAND_OK) 
+            printf("Resultou\n");
         
         //PQfinish(conn);
     }
     return;
-}
-
-
+}*/
 
 int insert_values (char *table_name, char *values)
 {
@@ -1677,7 +1690,7 @@ int insert_values (char *table_name, char *values)
     */
     char execution [100] = "INSERT INTO ";
     strcat(execution, table_name);
-    printf("%s\n",execution);
+    //printf("%s\n",execution);
     //strcat(execution, " (");
 
     int i = 0;
@@ -1692,7 +1705,7 @@ int insert_values (char *table_name, char *values)
     }*/
     //strcat(execution, ") ");
     strcat(execution, " VALUES (");
-    printf("%s\n",execution);
+    //printf("%s\n",execution);
 
 
 
@@ -1702,7 +1715,7 @@ int insert_values (char *table_name, char *values)
     {
         
         strcat(execution,token);
-        printf("%s\n",execution);
+        //printf("%s\n",execution);
         //printf("%s\n",token);
         token = strtok (NULL, "|");
          if (token!=NULL){
@@ -1721,6 +1734,9 @@ int insert_values (char *table_name, char *values)
     return PQresultStatus(res) == PGRES_COMMAND_OK;
 
 }
+
+
+
 /*
 void delete_values (PGconn *conn, char *table_name, char *PRIMARY_KEY, int id)
 {
@@ -1809,17 +1825,47 @@ void update_values (PGconn *conn, char *table_name, char *PRIMARY_KEY, int id, c
 }
 
 */
+
+
 int main()
 {
     FILE *f_terminal;
 
-    establish_DB_connection(conn,res,dbconn);
-    insert_values("section","1");
-    PQfinish(conn);
-    return 0;
+    dbconn = "host = 'db.fe.up.pt' dbname = 'sinf2021a35' user = 'sinf2021a35' password = 'ZbnBodLV'";
+    //EXAMPLE : dbconn = "host = 'db.fe.up.pt' dbname = 'sinf1920e32' user = 'sinf1920e32' password = 'QWTTIjZl'";
+
+    conn = PQconnectdb(dbconn);
+    PQexec(conn, "SET search_path TO gman_a35,public");
+
+    if (!conn)
+    {
+        printf( "libpq error: PQconnectdb returned NULL. \n\n");
+        PQfinish(conn);
+        exit(1);
+    }
+
+    else if (PQstatus(conn) != CONNECTION_OK)
+    {
+        printf( "Connection to DB failed: %s", PQerrorMessage(conn));
+        PQfinish(conn);
+        exit(1);
+    }
+
+    else
+    {
+        printf("Connection OK \n");
+        /*res = PQexec(conn, "INSERT INTO section VALUES (1)");
+        if( PQresultStatus(res) == PGRES_COMMAND_OK) 
+            printf("Resultou\n");
+        */
+    }
+
+    //insert_values("section","2");
+    
+    
 
     int n_atuadores = load_sensorconfig();
-    
+    return 0;
     time(&old);
     //check_OK();
     int rules_number = load_rules(n_atuadores);
@@ -1940,6 +1986,7 @@ int main()
         printf("\n");
     }
 
+    PQfinish(conn);
     fclose(f_terminal);
     free(power_hour);
     free(power_sec);
