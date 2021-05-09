@@ -30,7 +30,7 @@ CREATE TABLE actuator (
 
 CREATE TABLE rule (
 
-    rule_id SERIAL,
+    rule_id INT,
     name VARCHAR(45) NOT NULL,
     CONSTRAINT PK_rule PRIMARY KEY  (rule_id)
 );
@@ -38,7 +38,7 @@ CREATE TABLE rule (
 
 CREATE TABLE subrule(
 
-    subrule_id SERIAL,
+    subrule_id INT,
     sensor_name VARCHAR(45) NOT NULL,
     operation VARCHAR(2) NOT NULL,
     ref NUMERIC(3,2) NOT NULL,
