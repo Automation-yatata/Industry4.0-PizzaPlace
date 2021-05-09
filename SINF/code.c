@@ -687,7 +687,7 @@ int load_sensorconfig(void)
             {
                 // DB INSERT table: SENSOR
                 // Só insere se nao existir
-                printf("sensors_token:%s\n",token);
+                //printf("sensors_token:%s\n",token);
                 
                 strcpy(insert_tb_sensor,"'");
                 strcat(insert_tb_sensor,token);
@@ -698,14 +698,14 @@ int load_sensorconfig(void)
                 strcat(insert_tb_sensor,"0");
                 //printf("SENSOR %s\n",insert_tb_sensor);
                 insert_values("sensor",insert_tb_sensor);
-                printf("INSERIU SENSOR\n");
-                printf("\n");
+                //printf("INSERIU SENSOR\n");
+                //printf("\n");
                 //printf("sensor:%s  valor de i:%d\n",token,i);
                 strcpy(motes[i].pos[j].name, token);
                 //printf("teste:%s\n",motes[i].pos[j].name);
                 j++;
                 token = strtok_r(NULL, ",",&identifier1);
-                printf("tokk:%s\n",token);
+                //printf("tokk:%s\n",token);
             }
             j = 0;
 
@@ -727,9 +727,9 @@ int load_sensorconfig(void)
                 strcat(insert_tb_actuator,"'");
                 strcat(insert_tb_actuator,"|");
                 strcat(insert_tb_actuator,"FALSE");
-                printf("ACTUATOR %s\n",insert_tb_actuator);
+                //printf("ACTUATOR %s\n",insert_tb_actuator);
                 insert_values("actuator",insert_tb_actuator);
-                printf("INSERIU ACTUADOR\n");
+                //printf("INSERIU ACTUADOR\n");
 
                 strcpy(outputs_vetor[cnt].name, token);
                 cnt++;
@@ -806,15 +806,13 @@ int load_rules(int n)
         // j related to pos[] in layout struct (whats sensor; 0(volt) etc)
         // k  related to position in RULES vector
         sprintf(dec_to_str, "%d", i);
-        printf("://%s\n", dec_to_str);
-
         while (i <= N_MOTES)
         {
             if (strstr(token, dec_to_str) != NULL)
             {
-                printf("token %s\n",token);
+                //printf("token %s\n",token);
                 token = strtok(NULL, " ");
-                printf("token %s\n",token);
+                //printf("token %s\n",token);
 
                 if (strcpy(subject, token) == NULL)
                 {
@@ -838,7 +836,7 @@ int load_rules(int n)
                         fclose(f);
                         return -1;
                     }
-                    puts(subject);puts(predicate);
+                    //puts(subject);puts(predicate);
                     break;
                 }
                 else
@@ -899,8 +897,7 @@ int load_rules(int n)
             }
             else
             {
-                printf("ENTROU\n");
-                printf("i value:%d\n",i);
+                //printf("i value:%d\n",i);
                 i++;
                 dec_to_str[0]='\0';
                 sprintf(dec_to_str, "%d", i);
@@ -930,7 +927,7 @@ int load_rules(int n)
                     //printf("%d\n", rules_vec[k].ref);
                 sscanf(&subject[strlen(motes[i].pos[j].name) + 1], "%d", &rules_vec[k].ref);
                 //printf("%d\n", rules_vec[k].ref);
-                printf("%s\n", motes[i].pos[j].name);
+                //printf("%s\n", motes[i].pos[j].name);
 
                     char ref_value1[4];
                     sprintf(ref_value1, "%d", rules_vec[k].ref);
@@ -1131,7 +1128,7 @@ int load_rules(int n)
     }
 
     i = 0;
-
+    /*
     while (i < k)
     {
         if(rules_vec[i].is_complex==0){
@@ -1145,7 +1142,7 @@ int load_rules(int n)
                rules_vec[i].operation2, rules_vec[i].ref2, *rules_vec[i].out);
             i++;
         }
-    }
+    }*/
     fclose(f);
     return k;
 }
@@ -1724,7 +1721,7 @@ int insert_values (char *table_name, char *values)
     }
 
     strcat(execution, ");");
-    printf("%s\n",execution);
+    //printf("%s\n",execution);
 
     //(name, age) VALUES (“Anna”, 22)
 
@@ -1865,7 +1862,6 @@ int main()
     
 
     int n_atuadores = load_sensorconfig();
-    return 0;
     time(&old);
     //check_OK();
     int rules_number = load_rules(n_atuadores);
@@ -1921,7 +1917,7 @@ int main()
         if (fgets(str, MAX_CHAR, f_terminal) != NULL)
         {
             //printf("Passed\n");
-            //printf("VALOR_LIDO: %s", str);
+            printf("VALOR_LIDO: %s", str);
             if (check_message_start() == 1)
             {
                 moteID = (int)get_num_dec(15);
