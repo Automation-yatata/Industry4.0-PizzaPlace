@@ -1903,7 +1903,7 @@ int main()
     for (i = 0; i < r; i++)
         for (j = 0; j < N_MOTES; j++)
             power_hour[i][j] = 0;
-
+    
     while (1)
     {
         f_terminal = fopen("/tmp/ttyV10", "r");
