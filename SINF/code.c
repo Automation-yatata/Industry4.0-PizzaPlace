@@ -1939,6 +1939,26 @@ int main()
                     if (strstr(motes[moteID - 1].pos[j].name, "VOLT") != NULL)
                     {
                         motes[moteID - 1].pos[j].value = voltage;
+
+                        //DB CODE
+                        char sensor[10]="VOLT";
+                        char n[2];
+
+                        sprintf(n,"%d",moteID);
+                        strcat(sensor,n);
+
+                        //if VOLT_i exists on DB then
+                        char insert_to_sensor_vec[50];
+                        char value[8];
+                        
+                        strcpy(insert_to_sensor_vec,"CURRENT_TIMESTAMP");
+                        strcat(insert_to_sensor_vec,"|");
+                        sprintf(value,"%.2f",voltage);
+                        strcat(insert_to_sensor_vec,value);
+                        strcat(insert_to_sensor_vec,"|");
+                        strcat(insert_to_sensor_vec,sensor);
+                        printf("%s\n",insert_to_sensor_vec);
+
                     }
                     else if (strstr(motes[moteID - 1].pos[j].name, "LIGHT") != NULL)
                     {
