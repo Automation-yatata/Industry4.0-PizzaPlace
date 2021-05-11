@@ -1,4 +1,4 @@
-char search_value (char *table_name, char* ident, float value){
+char search_value (char *table_name, char* ident, char* value){
 
 
     //SELECT first_name, last_name FROM students WHERE mark >= 15;
@@ -14,9 +14,9 @@ char search_value (char *table_name, char* ident, float value){
     strcat(execution, " WHERE ");
     strcat(execution, ident);
     strcat(execution, " = ");
-    char aux [10];
-    gcvt(value,6,aux);
-    strcat(execution, aux);
+    //char aux [10];
+    //gcvt(value,6,aux);
+    strcat(execution, value);
 
 
     res = PQexec(conn, execution);
