@@ -35,7 +35,7 @@ void check_OK(void);
 int load_rules(int n);
 void print_mote(void);
 void write_2_RGB();
-void outputs_update(int n_rules);
+void outputs_update(int n_rules, int n);
 void measure_power(float **vec_sec, float **vec_hour, int moteID, float volt, float light, float curr, float temp, float humi);
 void establish_DB_connection(PGconn *conn , PGresult *res ,const char *dbconn);
 int insert_values (char *table_name, char *values);
@@ -95,6 +95,7 @@ typedef struct
 } OUTPUT;
 
 OUTPUT outputs_vetor[N_ACTUATORS];
+int outputs_history[N_ACTUATORS]={0};
 int init[N_MOTES];
 
 long get_num_dec(int pos)
@@ -695,8 +696,7 @@ int load_sensorconfig(void)
                 strcat(insert_tb_sensor,"'");
                 strcat(insert_tb_sensor,"|");
                 strcat(insert_tb_sensor,mote_id);
-                strcat(insert_tb_sensor,"|");
-                strcat(insert_tb_sensor,"0");
+
                 //printf("SENSOR %s\n",insert_tb_sensor);
                 insert_values("sensor",insert_tb_sensor);
                 //printf("INSERIU SENSOR\n");
@@ -727,7 +727,7 @@ int load_sensorconfig(void)
                 strcat(insert_tb_actuator,token);
                 strcat(insert_tb_actuator,"'");
                 strcat(insert_tb_actuator,"|");
-                strcat(insert_tb_actuator,"FALSE");
+                strcat(insert_tb_actuator,insert_tb_section);
                 //printf("ACTUATOR %s\n",insert_tb_actuator);
                 insert_values("actuator",insert_tb_actuator);
                 //printf("INSERIU ACTUADOR\n");
@@ -1430,7 +1430,7 @@ void write_2_RGB()
     free(str);
 }
 
-void outputs_update(int n_rules)
+void outputs_update(int n_rules, int n)
 {
 
     for (int i = 0; i < n_rules; i++)
@@ -1490,6 +1490,46 @@ void outputs_update(int n_rules)
             }
         }
     }
+
+
+
+    char insert_tb_actuator_vec[100];
+
+    printf("#######\n");
+    printf("CHECK OUTPUTS\n");
+    
+    for(int i=0; i<n;i++){
+
+        strcpy(insert_tb_actuator_vec,"CURRENT_TIMESTAMP|");
+
+        printf(" %s ON:%d OFF:%d \n", outputs_vetor[i].name, outputs_vetor[i].on , outputs_vetor[i].off);
+        if(outputs_vetor[i].on==1 && outputs_vetor[i].off==0 && outputs_history[i]==0){
+
+            strcat(insert_tb_actuator_vec,"'");
+            strcat(insert_tb_actuator_vec,outputs_vetor[i].name);
+            strcat(insert_tb_actuator_vec,"'");
+            strcat(insert_tb_actuator_vec,"|");
+            strcat(insert_tb_actuator_vec,"TRUE");
+            outputs_history[i]=outputs_vetor[i].on;
+            printf("%s\n",insert_tb_actuator_vec);
+            insert_values("actuator_vec",insert_tb_actuator_vec);
+            insert_tb_actuator_vec[0]='\0';
+
+        }else if (outputs_vetor[i].on==0 && outputs_vetor[i].off==1 && outputs_history[i]==1){
+            
+            strcat(insert_tb_actuator_vec,"'");
+            strcat(insert_tb_actuator_vec,outputs_vetor[i].name);
+            strcat(insert_tb_actuator_vec,"'");
+            strcat(insert_tb_actuator_vec,"|");
+            strcat(insert_tb_actuator_vec,"FALSE");
+            outputs_history[i]=outputs_vetor[i].on;
+            printf("%s\n",insert_tb_actuator_vec);
+            insert_values("actuator_vec",insert_tb_actuator_vec);
+            insert_tb_actuator_vec[0]='\0';
+        }
+
+    }
+    printf("#######\n");
 }
 
 void measure_power(float **vec_sec, float **vec_hour, int moteID, float volt, float light, float curr, float temp, float humi)
@@ -1858,9 +1898,8 @@ int main()
         */
     }
 
-    //insert_values("section","2");
     
-    
+    time_t atual_time;
 
     int n_atuadores = load_sensorconfig();
     time(&old);
@@ -1912,13 +1951,18 @@ int main()
             printf("Error terminal ttyV10\n");
             exit(EXIT_FAILURE);
         }
+    time_t DB_update_t1,DB_update_t2;
+    double diff_time;
+
+    time(&DB_update_t1);
+
     while (1)
     {
 
         if (fgets(str, MAX_CHAR, f_terminal) != NULL)
         {
             //printf("Passed\n");
-            printf("VALOR_LIDO: %s", str);
+           // printf("VALOR_LIDO: %s", str);
             if (check_message_start() == 1)
             {
                 moteID = (int)get_num_dec(15);
@@ -1934,49 +1978,166 @@ int main()
                     temperature = temperature * 10;
                 }
                 int j = 0;
+                
+                time(&DB_update_t2);
+                diff_time=difftime(DB_update_t2,DB_update_t1);
+                if(diff_time>5){
+                    DB_update_t1=DB_update_t2;
+                }
+
                 while (j < N_SENSOR_MOTE)
                 {
-
+                    
                     if (strstr(motes[moteID - 1].pos[j].name, "VOLT") != NULL)
                     {
-                        motes[moteID - 1].pos[j].value = voltage;
+                        motes[moteID - 1].pos[j].value = voltage;  
+                        //DB part
+                        //only updates 5 in 5 seconds
+                        if(diff_time>5)
+                        {   
+                            char sensor[10]="VOLT";
+                            char n[2];      
 
-                        //DB CODE
-                        char sensor[10]="VOLT";
-                        char n[2];
+                            sprintf(n,"%d",moteID);
+                            strcat(sensor,n);
+                            //printf("%s\n",sensor);
 
-                        sprintf(n,"%d",moteID);
-                        strcat(sensor,n);
-
-                        //if VOLT_i exists on DB then
-                        char insert_to_sensor_vec[50];
-                        char value[8];
+                            //if VOLT_i exists on DB then
+                            char insert_to_sensor_vec[100]="CURRENT_TIMESTAMP|";
+                            char value[8];
+                            
+                            sprintf(value,"%.2f",voltage);
+                            
+                            strcat(insert_to_sensor_vec,value);
+                            strcat(insert_to_sensor_vec,"|");
+                            strcat(insert_to_sensor_vec,"'");
+                            strcat(insert_to_sensor_vec,sensor);
+                            strcat(insert_to_sensor_vec,"'");
+                            printf("%s\n",insert_to_sensor_vec);
+                            insert_values("sensor_vec",insert_to_sensor_vec);
+                        }
                         
-                        strcpy(insert_to_sensor_vec,"CURRENT_TIMESTAMP");
-                        strcat(insert_to_sensor_vec,"|");
-                        sprintf(value,"%.2f",voltage);
-                        strcat(insert_to_sensor_vec,value);
-                        strcat(insert_to_sensor_vec,"|");
-                        strcat(insert_to_sensor_vec,sensor);
-                        insert_values("sensor_vec",insert_to_sensor_vec);
-                        printf("%s\n",insert_to_sensor_vec);
-
                     }
                     else if (strstr(motes[moteID - 1].pos[j].name, "LIGHT") != NULL)
                     {
                         motes[moteID - 1].pos[j].value = light;
+                        //DB Part
+                        //only updates 5 in 5 seconds
+                       
+                        if(diff_time>5)
+                        {   
+                            //DB CODE
+                            char sensor[10]="LIGHT";
+                            char n[2];      
+
+                            sprintf(n,"%d",moteID);
+                            strcat(sensor,n);
+                            //printf("%s\n",sensor);
+
+                            //if LIGHT_i exists on DB then
+                            char insert_to_sensor_vec[100]="CURRENT_TIMESTAMP|";
+                            char value[8];
+                            
+                            sprintf(value,"%.2f",light);
+                            
+                            strcat(insert_to_sensor_vec,value);
+                            strcat(insert_to_sensor_vec,"|");
+                            strcat(insert_to_sensor_vec,"'");
+                            strcat(insert_to_sensor_vec,sensor);
+                            strcat(insert_to_sensor_vec,"'");
+                            printf("%s\n",insert_to_sensor_vec);
+                            insert_values("sensor_vec",insert_to_sensor_vec);
+                        }
                     }
                     else if (strstr(motes[moteID - 1].pos[j].name, "CURR") != NULL)
                     {
                         motes[moteID - 1].pos[j].value = current;
+                        //DB Part
+                        
+                        if(diff_time>5)
+                        {   
+                            //DB CODE
+                            char sensor[10]="CURR";
+                            char n[2];      
+
+                            sprintf(n,"%d",moteID);
+                            strcat(sensor,n);
+                            //printf("%s\n",sensor);
+
+                            //if CURR_i exists on DB then
+                            char insert_to_sensor_vec[100]="CURRENT_TIMESTAMP|";
+                            char value[8];
+                            
+                            sprintf(value,"%.2f",current);
+                            
+                            strcat(insert_to_sensor_vec,value);
+                            strcat(insert_to_sensor_vec,"|");
+                            strcat(insert_to_sensor_vec,"'");
+                            strcat(insert_to_sensor_vec,sensor);
+                            strcat(insert_to_sensor_vec,"'");
+                            printf("%s\n",insert_to_sensor_vec);
+                            insert_values("sensor_vec",insert_to_sensor_vec);
+                        }
                     }
                     else if (strstr(motes[moteID - 1].pos[j].name, "TEMP") != NULL)
                     {
                         motes[moteID - 1].pos[j].value = temperature;
+                        //DB Part
+                        
+                        if(diff_time>5)
+                        {   
+                            //DB CODE
+                            char sensor[10]="TEMP";
+                            char n[2];      
+
+                            sprintf(n,"%d",moteID);
+                            strcat(sensor,n);
+                            //printf("%s\n",sensor);
+
+                            //if TEMP_i exists on DB then
+                            char insert_to_sensor_vec[100]="CURRENT_TIMESTAMP|";
+                            char value[8];
+                            
+                            sprintf(value,"%.2f",temperature);
+                            
+                            strcat(insert_to_sensor_vec,value);
+                            strcat(insert_to_sensor_vec,"|");
+                            strcat(insert_to_sensor_vec,"'");
+                            strcat(insert_to_sensor_vec,sensor);
+                            strcat(insert_to_sensor_vec,"'");
+                            printf("%s\n",insert_to_sensor_vec);
+                            insert_values("sensor_vec",insert_to_sensor_vec);
+                        }
                     }
                     else if (strstr(motes[moteID - 1].pos[j].name, "HUM") != NULL)
                     {
                         motes[moteID - 1].pos[j].value = humidity_temp;
+                        //DB Part
+                        
+                        if(diff_time>5)
+                        {   
+                            //DB CODE
+                            char sensor[10]="HUM";
+                            char n[2];      
+
+                            sprintf(n,"%d",moteID);
+                            strcat(sensor,n);
+                            //printf("%s\n",sensor);
+
+                            //if CURR_i exists on DB then
+                            char insert_to_sensor_vec[100]="CURRENT_TIMESTAMP|";
+                            char value[8];
+                            
+                            sprintf(value,"%.2f",humidity_temp);
+                            
+                            strcat(insert_to_sensor_vec,value);
+                            strcat(insert_to_sensor_vec,"|");
+                            strcat(insert_to_sensor_vec,"'");
+                            strcat(insert_to_sensor_vec,sensor);
+                            strcat(insert_to_sensor_vec,"'");
+                            printf("%s\n",insert_to_sensor_vec);
+                            insert_values("sensor_vec",insert_to_sensor_vec);
+                        }
                     }
                     j++;
                 }
@@ -1991,15 +2152,15 @@ int main()
         if (init[moteID - 1] != 1)
         {
             
-            outputs_update(rules_number);
+            outputs_update(rules_number,n_atuadores);
             measure_power(power_sec, power_hour, moteID, voltage, light, current, temperature, humidity_temp);
-            printf("PRE CHECK\n");
+            //printf("PRE CHECK\n");
             check_values(old_actuator_value, n_atuadores, rules_number, moteID);
-            printf("POS CHECK\n");
+            //printf("POS CHECK\n");
             new_values(moteID);
-            printf("POS NEW\n");
+            //printf("POS NEW\n");
             //write_2_RGB();
-            printf("POS RGB\n");
+            //printf("POS RGB\n");
             
         }
         else
