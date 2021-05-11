@@ -39,10 +39,12 @@ void outputs_update(int n_rules, int n);
 void measure_power(float **vec_sec, float **vec_hour, int moteID, float volt, float light, float curr, float temp, float humi);
 void establish_DB_connection(PGconn *conn , PGresult *res ,const char *dbconn);
 int insert_values (char *table_name, char *values);
-/*void delete_values (PGconn *conn, char *database_name, char *PRIMARY_KEY, int id);
-void drop_all (PGconn *conn);
-void update_values (PGconn *conn, char *table_name, char *PRIMARY_KEY, int id, char *column, float value);
-*/
+void clear_table(char *table_name, char *task);
+//void delete_values (PGconn *conn, char *database_name, char *PRIMARY_KEY, int id);
+void drop_all (void);
+void DDL_creation(void);
+//void update_values (PGconn *conn, char *table_name, char *PRIMARY_KEY, int id, char *column, float value);
+
 
 char str[MAX_CHAR];
 int count_sec;
@@ -1775,9 +1777,10 @@ int insert_values (char *table_name, char *values)
 
 
 
-/*
-void delete_values (PGconn *conn, char *table_name, char *PRIMARY_KEY, int id)
-{
+
+
+//void delete_values (PGconn *conn, char *table_name, char *PRIMARY_KEY, int id)
+/*{
     //"DELETE FROM employee WHERE id = "
 
     char execution [100] ="DELETE FROM ";
@@ -1792,18 +1795,65 @@ void delete_values (PGconn *conn, char *table_name, char *PRIMARY_KEY, int id)
     PGresult *res = PQexec(conn, execution);
 
     return PQresultStatus(res) == PGRES_COMMAND_OK;
+}*/
+
+void clear_table(char *table_name, char *task){
+
+    if(strstr(task,"ALL")!=NULL){
+    
+        char table_names [10][15];
+        strcpy(table_names [0],"SENSOR_VEC");
+        strcpy(table_names [1],"SECTION");
+        strcpy(table_names [2],"MOTE");
+        strcpy(table_names [3],"SENSOR");
+        strcpy(table_names [4],"SUBRULE");
+        strcpy(table_names [5],"OP_R_SUBR");
+        strcpy(table_names [6],"RULE");
+        strcpy(table_names [7],"ACTUATOR");
+        strcpy(table_names [8],"ACTUATOR_VEC");
+
+        int i = 0;
+        
+        while (i<9){
+            char execution [100] = "DELETE FROM ";
+            strcat(execution,table_names[i]);
+            strcat(execution," CASCADE");
+            res = PQexec(conn,execution);
+            if(!res){
+                printf(" ERROR DELETING ALL TABLES \n");
+                PQfinish(conn);
+                exit(1);
+            }
+            i++;
+
+        }
+        printf("ALL TABLES CLEAR!! \n");
+        return;
+
+    }else{
+        
+        char command[100]="DELETE FROM ";
+        strcat(command,table_name);
+        strcat(command," CASCADE");
+        
+        
+        PGresult *res = PQexec(conn,command);
+        if(!res){
+            
+            printf("Error DELETING TABLE %s\n",table_name);
+            PQfinish(conn);
+            exit(1);
+        }
+        printf("TABLE %s CLEAR!! \n",table_name);
+        return;
+    }
+
 }
 
 
-void drop_all (PGconn *conn)
+void drop_all (void)
 {
-
     //DROP TABLE <table_name> CASCADE
-
-    char execution [100] = "DROP TABLE  ";
-    PGresult *res;
-    int retorno;
-
 
     char table_names [10][15];
     strcpy(table_names [0],"SENSOR_VEC");
@@ -1816,32 +1866,52 @@ void drop_all (PGconn *conn)
     strcpy(table_names [7],"ACTUATOR");
     strcpy(table_names [8],"ACTUATOR_VEC");
     
-
     int i = 0;
     while (i<9){
-
+        char execution [100] = "DROP TABLE  ";
         strcat(execution,table_names[i]);
         strcat(execution," CASCADE");
         res = PQexec(conn,execution);
-        if(res != PGRES_COMMAND_OK){
-            print("Error Drop Table %d\n",i);
-            retorno = 1;
+        if(!res){
+            
+            printf("Error DROPING ALL \n");
+            PQfinish(conn);
+            exit(1);
         }
-
-        execution[0] = '\0';
 
         i++;
     }
 
-    
-    if (retorno==1){
-        return 1;
-    }
-    return 0;  
+    return ;  
 }
 
-void update_values (PGconn *conn, char *table_name, char *PRIMARY_KEY, int id, char *column, float value)
-{
+void DDL_creation(void){
+
+    FILE *f=fopen("DDL.sql","r");
+    if(f==NULL){
+        printf("Error opening DDL\n");
+        return;
+    }
+        
+    char line[2000];
+    fgets(line,1999,f); //devido ao schema ja existir
+    while( fgets(line,1999,f) != NULL ){
+        
+        //printf("%s",line);
+        res = PQexec(conn,line);
+        if(!res){
+            
+            printf("Error CREATING TABLES \n");
+            PQfinish(conn);
+            exit(1);
+        }
+
+    }
+    return;
+}
+
+//void update_values (PGconn *conn, char *table_name, char *PRIMARY_KEY, int id, char *column, float value)
+/*{
     //UPDATE students SET age = 17 WHERE id = 7
 
     char execution [100] ="UPDATE ";
@@ -1897,6 +1967,11 @@ int main()
             printf("Resultou\n");
         */
     }
+    // LIMPAR HISTORICO EM MEMORIA
+    //clear_table(" ","ALL");
+    drop_all();
+    DDL_creation();
+
 
     
     time_t atual_time;
