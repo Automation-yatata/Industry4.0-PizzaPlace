@@ -283,12 +283,13 @@ void new_values(int moteID)
         printf("Error new_values 2\n");
         exit(EXIT_FAILURE);
     }
-
+    
     fgets(frase, 300, f_msgcreator);
 
     token = strtok(frase, "[");
     token = strtok(NULL, "[");
-    char aux[10];
+    
+    char aux[20];
     strcpy(aux, token);
 
     //printf("token i: %s\n",token);
@@ -1957,6 +1958,7 @@ int main()
                         strcat(insert_to_sensor_vec,value);
                         strcat(insert_to_sensor_vec,"|");
                         strcat(insert_to_sensor_vec,sensor);
+                        insert_values("sensor_vec",insert_to_sensor_vec);
                         printf("%s\n",insert_to_sensor_vec);
 
                     }
@@ -1991,9 +1993,13 @@ int main()
             
             outputs_update(rules_number);
             measure_power(power_sec, power_hour, moteID, voltage, light, current, temperature, humidity_temp);
+            printf("PRE CHECK\n");
             check_values(old_actuator_value, n_atuadores, rules_number, moteID);
+            printf("POS CHECK\n");
             new_values(moteID);
-            write_2_RGB();
+            printf("POS NEW\n");
+            //write_2_RGB();
+            printf("POS RGB\n");
             
         }
         else
