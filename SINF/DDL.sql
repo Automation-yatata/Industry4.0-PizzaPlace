@@ -16,7 +16,6 @@ CREATE TABLE sensor (
 
     name VARCHAR(45),
     mote_id INT NOT NULL,
-    actual_value NUMERIC(10,2) NOT NULL ,
     CONSTRAINT PK_sens_name PRIMARY KEY (name)
 );
 
@@ -24,7 +23,6 @@ CREATE TABLE sensor (
 CREATE TABLE actuator (
 
     name VARCHAR(45),
-    actual_state BOOLEAN NOT NULL, 
     CONSTRAINT PK_act_name PRIMARY KEY (name)
 );
 
@@ -41,7 +39,7 @@ CREATE TABLE subrule(
     subrule_id INT,
     sensor_name VARCHAR(45) NOT NULL,
     operation VARCHAR(2) NOT NULL,
-    ref NUMERIC(3,2) NOT NULL,
+    ref REAL NOT NULL,
     CONSTRAINT PK_subRule PRIMARY KEY (subrule_id)
 );
 
@@ -56,7 +54,7 @@ CREATE TABLE op_r_subr (
 CREATE TABLE sensor_vec (
     
     date TIMESTAMP,
-    value NUMERIC(3,2) NOT NULL ,
+    value REAL NOT NULL ,
     name_sens VARCHAR(45) ,
     CONSTRAINT PK_sens_vec PRIMARY KEY (date,name_sens)
 );
@@ -92,10 +90,4 @@ ALTER TABLE actuator_vec ADD CONSTRAINT FK_Name
 
 ALTER TABLE sensor_vec ADD CONSTRAINT PK_Name 
     FOREIGN KEY (name_sens) REFERENCES sensor (name) ;
-
-ALTER TABLE subrule ALTER COLUMN ref TYPE real;
-
-
-
-
 
