@@ -16,7 +16,7 @@ CREATE TABLE sensor (
 
     name VARCHAR(45),
     mote_id INT NOT NULL,
-    actual_value NUMERIC(3,2) NOT NULL ,
+    actual_value NUMERIC(10,2) NOT NULL ,
     CONSTRAINT PK_sens_name PRIMARY KEY (name)
 );
 
@@ -92,6 +92,8 @@ ALTER TABLE actuator_vec ADD CONSTRAINT FK_Name
 
 ALTER TABLE sensor_vec ADD CONSTRAINT PK_Name 
     FOREIGN KEY (name_sens) REFERENCES sensor (name) ;
+
+ALTER TABLE subrule ALTER COLUMN ref TYPE real;
 
 
 
