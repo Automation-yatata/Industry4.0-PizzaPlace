@@ -23,6 +23,7 @@ CREATE TABLE sensor (
 CREATE TABLE actuator (
 
     name VARCHAR(45),
+    section_id INT NOT NULL, 
     CONSTRAINT PK_act_name PRIMARY KEY (name)
 );
 
@@ -72,6 +73,9 @@ ALTER TABLE mote ADD CONSTRAINT FK_sectionID
 
 ALTER TABLE sensor ADD CONSTRAINT FK_moteID
     FOREIGN KEY (mote_id) REFERENCES mote (mote_id) ;
+
+ALTER TABLE actuator ADD CONSTRAINT FK_sectionID
+    FOREIGN KEY (section_id) REFERENCES section (section_id) ;
 
 ALTER TABLE rule ADD CONSTRAINT FK_RuleActName
     FOREIGN KEY (name) REFERENCES actuator (name) ;
