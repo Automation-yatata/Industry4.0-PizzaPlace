@@ -1904,15 +1904,15 @@ int main()
         for (j = 0; j < N_MOTES; j++)
             power_hour[i][j] = 0;
     
-    while (1)
-    {
-        f_terminal = fopen("/tmp/ttyV10", "r");
+    f_terminal = fopen("/tmp/ttyV10", "r");
 
         if (f_terminal == NULL)
         {
             printf("Error terminal ttyV10\n");
             exit(EXIT_FAILURE);
         }
+    while (1)
+    {
 
         if (fgets(str, MAX_CHAR, f_terminal) != NULL)
         {
@@ -1988,12 +1988,13 @@ int main()
         }
         if (init[moteID - 1] != 1)
         {
-
+            
             outputs_update(rules_number);
             measure_power(power_sec, power_hour, moteID, voltage, light, current, temperature, humidity_temp);
             check_values(old_actuator_value, n_atuadores, rules_number, moteID);
             new_values(moteID);
             write_2_RGB();
+            
         }
         else
         {
