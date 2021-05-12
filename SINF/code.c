@@ -1494,7 +1494,7 @@ void outputs_update(int n_rules, int n)
     }
 
 
-
+    //DB PART
     char insert_tb_actuator_vec[100];
 
     printf("#######\n");
@@ -1528,10 +1528,23 @@ void outputs_update(int n_rules, int n)
             printf("%s\n",insert_tb_actuator_vec);
             insert_values("actuator_vec",insert_tb_actuator_vec);
             insert_tb_actuator_vec[0]='\0';
+
+        }else if(outputs_vetor[i].on==0 && outputs_vetor[i].off==0 && outputs_history[i]==1){
+
+            strcat(insert_tb_actuator_vec,"'");
+            strcat(insert_tb_actuator_vec,outputs_vetor[i].name);
+            strcat(insert_tb_actuator_vec,"'");
+            strcat(insert_tb_actuator_vec,"|");
+            strcat(insert_tb_actuator_vec,"FALSE");
+            outputs_history[i]=outputs_vetor[i].on;
+            printf("%s\n",insert_tb_actuator_vec);
+            insert_values("actuator_vec",insert_tb_actuator_vec);
+            insert_tb_actuator_vec[0]='\0';
         }
 
     }
     printf("#######\n");
+    return;
 }
 
 void measure_power(float **vec_sec, float **vec_hour, int moteID, float volt, float light, float curr, float temp, float humi)
@@ -1968,8 +1981,8 @@ int main()
         */
     }
     // LIMPAR HISTORICO EM MEMORIA
-    //clear_table(" ","ALL");
-    drop_all();
+    clear_table(" ","ALL");
+    //drop_all();
     DDL_creation();
 
 
@@ -2030,10 +2043,17 @@ int main()
     double diff_time;
 
     time(&DB_update_t1);
+    int n_mote=0;
+
 
     while (1)
-    {
+    {   
+        //Assume-se q se executa sempre a mote1 antes de executar a mote2 (mote2=>mote1), se executar so a mote2 da erro
 
+        if(n_mote<moteID){
+            n_mote=moteID;
+        }
+        
         if (fgets(str, MAX_CHAR, f_terminal) != NULL)
         {
             //printf("Passed\n");
@@ -2056,8 +2076,15 @@ int main()
                 
                 time(&DB_update_t2);
                 diff_time=difftime(DB_update_t2,DB_update_t1);
+
                 if(diff_time>5){
-                    DB_update_t1=DB_update_t2;
+                    if(N_MOTES-moteID==0)
+                        DB_update_t1=DB_update_t2;
+                    // falta rever a parte de inserir em todos os segundo se so houvesse 1 mote
+                    else if( n_mote==1 && diff_time>5){
+                        DB_update_t1=DB_update_t2;
+                    }
+                     
                 }
 
                 while (j < N_SENSOR_MOTE)
@@ -2233,6 +2260,16 @@ int main()
             check_values(old_actuator_value, n_atuadores, rules_number, moteID);
             //printf("POS CHECK\n");
             new_values(moteID);
+
+            // ################################
+            // Alterado pq nao funciona a matriz RGB
+            for (int i = 0; i < N_ACTUATORS; i++)
+            {
+
+                outputs_vetor[i].on = 0;
+                outputs_vetor[i].off = 0;
+            }
+
             //printf("POS NEW\n");
             //write_2_RGB();
             //printf("POS RGB\n");
