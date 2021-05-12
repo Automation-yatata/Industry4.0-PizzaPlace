@@ -1886,10 +1886,6 @@ int insert_values (char *table_name, char *values)
 
 }
 
-
-
-
-
 //void delete_values (PGconn *conn, char *table_name, char *PRIMARY_KEY, int id)
 /*{
     //"DELETE FROM employee WHERE id = "
