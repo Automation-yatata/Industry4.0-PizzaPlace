@@ -895,7 +895,7 @@ int load_rules(int n)
                     //int subrule_i_aux= subrule_i-1;
                     int subrule_i_aux = subrule_i;
 
-                    printf("%d \n", subrule_i);
+                    //printf("%d \n", subrule_i);
                     char subrule_id[256];
                     sprintf(subrule_id, "%d", subrule_i_aux);
 
@@ -1127,7 +1127,7 @@ int load_rules(int n)
                 strcat(insert_tb_rule,ptr);
 
                 //printf("1\n");
-                printf("%s\n", insert_tb_rule);
+                //printf("%s\n", insert_tb_rule);
                 insert_values("rule", insert_tb_rule);
                 rule_i++;
 
@@ -1601,7 +1601,7 @@ void outputs_update(int n_rules, int n)
 
         strcpy(insert_tb_actuator_vec, "CURRENT_TIMESTAMP|");
 
-        printf(" %s ON:%d OFF:%d \n", outputs_vetor[i].name, outputs_vetor[i].on, outputs_vetor[i].off);
+        //printf(" %s ON:%d OFF:%d \n", outputs_vetor[i].name, outputs_vetor[i].on, outputs_vetor[i].off);
         if (outputs_vetor[i].on == 1 && outputs_vetor[i].off == 0 && outputs_history[i] == 0)
         {
 
@@ -2124,7 +2124,7 @@ int main()
     
     //TEST QUERY
     //query();
-
+    //return 0;
 
     int moteID;
     float voltage, light, current, temperature, rel_humidity, humidity_temp;
