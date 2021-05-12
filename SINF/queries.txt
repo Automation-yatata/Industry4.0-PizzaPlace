@@ -1,0 +1,1 @@
+SELECT r.rule_id, s.sensor_name, s.operation, s.ref, o.op_between_rules,r.name FROM op_r_subr AS o, subrule AS s, rule AS r WHERE o.subrule_id = s.subrule_id AND o.rule_id = r.rule_id;

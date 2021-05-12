@@ -8,7 +8,7 @@ CREATE TABLE sensor ( name VARCHAR(45), mote_id INT NOT NULL, CONSTRAINT PK_sens
 
 CREATE TABLE actuator (name VARCHAR(45),section_id INT NOT NULL,CONSTRAINT PK_act_name PRIMARY KEY (name));
 
-CREATE TABLE rule (rule_id INT, name VARCHAR(45) NOT NULL,CONSTRAINT PK_rule PRIMARY KEY  (rule_id));
+CREATE TABLE rule (rule_id INT, name VARCHAR(45) NOT NULL, act_state BOOLEAN, CONSTRAINT PK_rule PRIMARY KEY  (rule_id));
 
 CREATE TABLE subrule( subrule_id INT, sensor_name VARCHAR(45) NOT NULL, operation VARCHAR(2) NOT NULL,ref REAL NOT NULL, CONSTRAINT PK_subRule PRIMARY KEY (subrule_id));
 
