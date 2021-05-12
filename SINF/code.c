@@ -774,6 +774,7 @@ void check_OK(void)
     printf("\n");
     return;
 }
+
 int load_rules(int n)
 {
 
@@ -791,8 +792,18 @@ int load_rules(int n)
     char subject2[MAX_CHAR];
     char predicate[MAX_CHAR];
 
+    int rule_i=0;
+    int subrule_i=0;
+
     while (fgets(line, 2 * MAX_CHAR, f) != NULL && k < MAX_RULES)
     {
+        char insert_tb_subrule1[50];
+        insert_tb_subrule1[0]= '\0';
+        char insert_tb_subrule2[50];
+        insert_tb_subrule2[0]= '\0';
+        char insert_tb_op_r_subr[50];
+        insert_tb_op_r_subr[0]= '\0';
+
         //printf("%s\n", line);
         j = 0;
         int is_and = 0, is_or = 0;
@@ -809,8 +820,11 @@ int load_rules(int n)
         // j related to pos[] in layout struct (whats sensor; 0(volt) etc)
         // k  related to position in RULES vector
         sprintf(dec_to_str, "%d", i);
+        //printf("://%s\n", dec_to_str);
+
         while (i <= N_MOTES)
         {
+
             if (strstr(token, dec_to_str) != NULL)
             {
                 //printf("token %s\n",token);
@@ -874,21 +888,31 @@ int load_rules(int n)
                         return -1;
                     }
 
-                    //puts(subject);
+                   //puts(subject);
                     //printf("AND?%d\n",is_and);
+
                         char Op_between_rules[4];
-                        if(is_and==1) strcpy(Op_between_rules, "AND");
-                        else if (is_and==0) strcpy(Op_between_rules, "OR");
+                        if(is_and==1 && is_or==0) strcpy(Op_between_rules, "AND");
+                        else if (is_and==0 && is_or==1 ) strcpy(Op_between_rules, "OR");
 
-                        char insert_tb_op_r_subr[50];
+                        char rule_id[256];
+                        sprintf(rule_id, "%d", rule_i);
 
-                        strcpy(insert_tb_op_r_subr, "DEFAULT");
+                        //int subrule_i_aux= subrule_i-1;
+                        int subrule_i_aux=subrule_i;
+                        
+                        printf("%d \n",subrule_i);
+                        char subrule_id[256];
+                        sprintf(subrule_id, "%d", subrule_i_aux);
+
+                        strcpy(insert_tb_op_r_subr, subrule_id);
                         strcat(insert_tb_op_r_subr, "|");
+                        strcat(insert_tb_op_r_subr, rule_id);
+                        strcat(insert_tb_op_r_subr, "|");
+                        strcat(insert_tb_op_r_subr, "'");
                         strcat(insert_tb_op_r_subr, Op_between_rules);
-                        strcat(insert_tb_op_r_subr, "|");
-                        strcat(insert_tb_op_r_subr, "DEFAULT");
-                        strcat(insert_tb_op_r_subr, "|");
-                        strcat(insert_tb_op_r_subr, "0");
+                        strcat(insert_tb_op_r_subr, "'");
+                        
 
                         //insert_values(conn,"op_r_subr","subrule_id,op_between_rules,rule_id",insert_tb_op_r_subr);
 
@@ -900,6 +924,7 @@ int load_rules(int n)
             }
             else
             {
+                //printf("ENTROU\n");
                 //printf("i value:%d\n",i);
                 i++;
                 dec_to_str[0]='\0';
@@ -914,6 +939,7 @@ int load_rules(int n)
 
         while (1)
         {
+
             // Load 1st part --> Sensor;Oper;Ref
             //puts(subject);
             //puts(predicate);
@@ -938,19 +964,26 @@ int load_rules(int n)
                     char SENSOR_NAME1[7];
                     strcpy(SENSOR_NAME1, motes[i].pos[j].name);
 
+                    char subrule_id[256];
+                    sprintf(subrule_id, "%d", subrule_i);
 
-                    char insert_tb_subrule[50];
-                    strcpy(insert_tb_subrule, "DEFAULT");
-                    strcat(insert_tb_subrule, "|");
-                    strcat(insert_tb_subrule, operation1);
-                    strcat(insert_tb_subrule, "|");
-                    strcat(insert_tb_subrule, ref_value1);
-                    strcat(insert_tb_subrule, "|");
-                    strcat(insert_tb_subrule, SENSOR_NAME1);
-                    strcat(insert_tb_subrule, "|");
-                    strcat(insert_tb_subrule, "0");
 
-                    //insert_values(conn,"subrule","subrule_id,operation,ref_value,name",insert_tb_subrule);
+                    strcpy(insert_tb_subrule1, subrule_id);
+                    strcat(insert_tb_subrule1, "|");
+                    strcat(insert_tb_subrule1, "'");
+                    strcat(insert_tb_subrule1, SENSOR_NAME1);
+                    strcat(insert_tb_subrule1, "'");
+                    strcat(insert_tb_subrule1, "|");
+                    strcat(insert_tb_subrule1, "'");
+                    strcat(insert_tb_subrule1, operation1);
+                    strcat(insert_tb_subrule1, "'");
+                    strcat(insert_tb_subrule1, "|");
+                    strcat(insert_tb_subrule1, ref_value1);
+
+                    subrule_i++;
+
+
+                    //insert_values(conn,"subrule","subrule_id,operation,ref_value,name",insert_tb_subrule1);
 
                 if (is_and == 1 || is_or == 1)
                 {
@@ -1000,6 +1033,7 @@ int load_rules(int n)
         i = 0;
         while (1)
         {
+
             if (rules_vec[k].is_complex == 0)
                 break;
             // Load 2nd part --> Sensor2;Oper2;Ref2
@@ -1019,22 +1053,29 @@ int load_rules(int n)
                 char ref_value2[4];
                     sprintf(ref_value2, "%d", rules_vec[k].ref2);
 
+
                     char SENSOR_NAME2[7];
                     strcpy(SENSOR_NAME2, motes[i].pos[j].name);
 
+                    char subrule_id[256];
+                    sprintf(subrule_id, "%d", subrule_i);
 
-                    char insert_tb_subrule[50];
-                    strcpy(insert_tb_subrule, "DEFAULT");
-                    strcat(insert_tb_subrule, "|");
-                    strcat(insert_tb_subrule, operation2);
-                    strcat(insert_tb_subrule, "|");
-                    strcat(insert_tb_subrule, ref_value2);
-                    strcat(insert_tb_subrule, "|");
-                    strcat(insert_tb_subrule, SENSOR_NAME2);
-                    strcat(insert_tb_subrule, "|");
-                    strcat(insert_tb_subrule, "0");
+                    strcpy(insert_tb_subrule2, subrule_id);
+                    strcat(insert_tb_subrule2, "|");
+                    strcat(insert_tb_subrule2, "'");
+                    strcat(insert_tb_subrule2, SENSOR_NAME2);
+                    strcat(insert_tb_subrule2, "'");
+                    strcat(insert_tb_subrule2, "|");
+                    strcat(insert_tb_subrule2, "'");
+                    strcat(insert_tb_subrule2, operation2);
+                    strcat(insert_tb_subrule2, "'");
+                    strcat(insert_tb_subrule2, "|");
+                    strcat(insert_tb_subrule2, ref_value2);
 
-                    //insert_values(conn,"subrule","subrule_id,operation,ref_value,name",insert_tb_subrule);
+
+                    subrule_i++;
+
+                    //insert_values(conn,"subrule","subrule_id,operation,ref_value,name",insert_tb_subrule2);
                 break;
             }
             else
@@ -1070,18 +1111,74 @@ int load_rules(int n)
 
             if (strstr(predicate, outputs_vetor[j].name) != NULL)
             {
+                //printf("1\n");
                  //printf("%s\n",predicate);
                  //printf("%s\n",outputs_vetor[j].name);
                     char ACTUATOR_NAME[20];
                     strcpy(ACTUATOR_NAME, outputs_vetor[j].name);
 
+                    char rule_id[256];
+                    sprintf(rule_id, "%d", rule_i);
+
                     char insert_tb_rule[50];
 
-                    strcpy(insert_tb_rule, "DEFAULT");
+                    strcpy(insert_tb_rule, rule_id);
                     strcat(insert_tb_rule, "|");
-                    strcat(insert_tb_rule, "0");
+                    strcat(insert_tb_rule, "'");
+                    strcat(insert_tb_rule, ACTUATOR_NAME);
+                    strcat(insert_tb_rule, "'");
 
-                    //insert_values(conn,"rule","rule_id,name",insert_tb_rule);
+                    //printf("1\n");
+                    //printf("%s\n", insert_tb_rule);
+                    insert_values("rule",insert_tb_rule);
+                    rule_i++;
+
+                    //printf("%s\n", insert_tb_subrule1);
+                    if (insert_tb_subrule1[0]!='\0'){
+                        //printf("ENTROU\n");
+                    insert_values("subrule",insert_tb_subrule1);
+                    //printf("%s", insert_tb_subrule1);
+                    }
+
+                    if (insert_tb_subrule2[0]!='\0'){
+                    insert_values("subrule",insert_tb_subrule2);
+                    //printf("%s", insert_tb_subrule2);
+                    }
+
+                    if (insert_tb_op_r_subr[0]!='\0'){
+                        insert_values("op_r_subr",insert_tb_op_r_subr);
+                        
+                        char subrule_id[256];
+                        int subrule_i_aux= subrule_i-1;
+                        sprintf(subrule_id, "%d", subrule_i_aux);
+                        strcpy(insert_tb_op_r_subr, subrule_id);
+                        strcat(insert_tb_op_r_subr, "|");
+                        strcat(insert_tb_op_r_subr, rule_id);
+                        strcat(insert_tb_op_r_subr, "|");
+                        strcat(insert_tb_op_r_subr, "NULL");
+                            
+                            
+
+                            insert_values("op_r_subr", insert_tb_op_r_subr);
+                        //printf("%s\n", insert_tb_op_r_subr);
+                    }
+                    else if (insert_tb_op_r_subr[0]=='\0'){
+
+                        int subrule_i_aux= subrule_i-1;
+                        char subrule_id[256];
+                        sprintf(subrule_id, "%d", subrule_i_aux);
+
+                        strcpy(insert_tb_op_r_subr, subrule_id);
+                        strcat(insert_tb_op_r_subr, "|");
+                        strcat(insert_tb_op_r_subr, rule_id);
+                        strcat(insert_tb_op_r_subr, "|");
+                        strcat(insert_tb_op_r_subr, "NULL");
+
+                        //printf("%s\n", insert_tb_op_r_subr);
+                        insert_values("op_r_subr", insert_tb_op_r_subr);
+                    }
+
+                    //insert_values("subrule", "15|'TEMP2'|'<'|200");
 
 
                 char *token = strtok(predicate, ":");
@@ -1131,8 +1228,8 @@ int load_rules(int n)
     }
 
     i = 0;
-    /*
-    while (i < k)
+
+    /*while (i < k)
     {
         if(rules_vec[i].is_complex==0){
         printf("%s_%c_%d || Actuator ON|OFF %d\n", rules_vec[i].sensor->name,
@@ -1149,6 +1246,7 @@ int load_rules(int n)
     fclose(f);
     return k;
 }
+
 void print_mote(void)
 {
 
@@ -1980,9 +2078,10 @@ int main()
             printf("Resultou\n");
         */
     }
+    
     // LIMPAR HISTORICO EM MEMORIA
-    clear_table(" ","ALL");
-    //drop_all();
+    //clear_table(" ","ALL");
+    drop_all();
     DDL_creation();
 
 
@@ -2115,7 +2214,7 @@ int main()
                             strcat(insert_to_sensor_vec,"'");
                             strcat(insert_to_sensor_vec,sensor);
                             strcat(insert_to_sensor_vec,"'");
-                            printf("%s\n",insert_to_sensor_vec);
+                            //printf("%s\n",insert_to_sensor_vec);
                             insert_values("sensor_vec",insert_to_sensor_vec);
                         }
                         
@@ -2147,7 +2246,7 @@ int main()
                             strcat(insert_to_sensor_vec,"'");
                             strcat(insert_to_sensor_vec,sensor);
                             strcat(insert_to_sensor_vec,"'");
-                            printf("%s\n",insert_to_sensor_vec);
+                            //printf("%s\n",insert_to_sensor_vec);
                             insert_values("sensor_vec",insert_to_sensor_vec);
                         }
                     }
@@ -2177,7 +2276,7 @@ int main()
                             strcat(insert_to_sensor_vec,"'");
                             strcat(insert_to_sensor_vec,sensor);
                             strcat(insert_to_sensor_vec,"'");
-                            printf("%s\n",insert_to_sensor_vec);
+                            //printf("%s\n",insert_to_sensor_vec);
                             insert_values("sensor_vec",insert_to_sensor_vec);
                         }
                     }
@@ -2207,7 +2306,7 @@ int main()
                             strcat(insert_to_sensor_vec,"'");
                             strcat(insert_to_sensor_vec,sensor);
                             strcat(insert_to_sensor_vec,"'");
-                            printf("%s\n",insert_to_sensor_vec);
+                            //printf("%s\n",insert_to_sensor_vec);
                             insert_values("sensor_vec",insert_to_sensor_vec);
                         }
                     }
@@ -2237,7 +2336,7 @@ int main()
                             strcat(insert_to_sensor_vec,"'");
                             strcat(insert_to_sensor_vec,sensor);
                             strcat(insert_to_sensor_vec,"'");
-                            printf("%s\n",insert_to_sensor_vec);
+                            //printf("%s\n",insert_to_sensor_vec);
                             insert_values("sensor_vec",insert_to_sensor_vec);
                         }
                     }
