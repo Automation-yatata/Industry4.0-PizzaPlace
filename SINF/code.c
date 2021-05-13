@@ -17,6 +17,10 @@
 #define BLACK "[0,0,0]"
 #define WHITE "[255,255,255]"
 
+PGconn *conn;
+PGresult *res;
+const char *dbconn;
+
 long get_num_dec(int pos);
 int check_message_start(void);
 float get_voltage(long dec);
@@ -30,10 +34,15 @@ void check_OK(void);
 int load_rules(int n);
 void print_mote(void);
 void write_2_RGB();
-void outputs_update(int n_rules);
+void outputs_update(int n_rules, int n);
 void measure_power(float **vec_sec, float **vec_hour, int moteID, float volt, float light, float curr, float temp, float humi);
-void establish_DB_connection(PGconn *conn , PGresult *res ,const char *dbconn);
-
+void establish_DB_connection(PGconn *conn, PGresult *res, const char *dbconn);
+int insert_values(char *table_name, char *values);
+void clear_table(char *table_name, char *task);
+//void delete_values (PGconn *conn, char *database_name, char *PRIMARY_KEY, int id);
+void drop_all(void);
+void DDL_creation(void);
+//void update_values (PGconn *conn, char *table_name, char *PRIMARY_KEY, int id, char *column, float value);
 
 char str[MAX_CHAR];
 int count_sec;
@@ -86,6 +95,7 @@ typedef struct
 } OUTPUT;
 
 OUTPUT outputs_vetor[N_ACTUATORS];
+int outputs_history[N_ACTUATORS] = {0};
 int init[N_MOTES];
 
 long get_num_dec(int pos)
@@ -109,6 +119,7 @@ long get_num_dec(int pos)
 
 float get_voltage(long dec)
 {
+
     return ((float)dec / 4096) * 1.5 * 2;
 }
 float get_light(long dec)
@@ -278,7 +289,8 @@ void new_values(int moteID)
 
     token = strtok(frase, "[");
     token = strtok(NULL, "[");
-    char aux[10];
+
+    char aux[20];
     strcpy(aux, token);
 
     //printf("token i: %s\n",token);
@@ -584,6 +596,7 @@ int load_sensorconfig(void)
 
     char line[2 * MAX_CHAR];
     char *token;
+    char *identifier1;
     char dec_to_str[3];
     char inputs[MAX_CHAR];
     char outputs[MAX_CHAR];
@@ -601,14 +614,33 @@ int load_sensorconfig(void)
         if (fgets(line, 2 * MAX_CHAR, f) != NULL)
         {
             //printf("%s\n", line);
-            token = strtok(line, ":");
-            sprintf(dec_to_str, "%d", i + 1);
+            token = strtok_r(line, ":", &identifier1);
+            //sprintf(dec_to_str, "%d", i + 1);
+            strcpy(dec_to_str, &token[strlen(token) - 1]);
+            char insert_tb_section[3];
 
-            while (1)
+            //DB INSERT table: SECTION
+            // Só insere se for nao existir
+
+            strcpy(insert_tb_section, dec_to_str);
+            //printf("SECTION %s\n",insert_tb_section);
+            insert_values("section", insert_tb_section);
+            //printf("INSERIU SECTION\n");
+
+            token = strtok_r(NULL, ":", &identifier1);
+            //printf("tok:%s\n",token);
+            strcpy(inputs, token);
+            token = strtok_r(NULL, "\n", &identifier1);
+            //printf("tok2%s\n",token);
+            strcpy(outputs, token);
+
+            /*while (1)
             {
+                
                 if (strstr(token, dec_to_str) != NULL)
                 {
                     token = strtok(NULL, ":");
+                    printf("tok:%s\n",token);
                     strcpy(inputs, token);
 
                     token = strtok(NULL, "\n");
@@ -618,29 +650,87 @@ int load_sensorconfig(void)
                 }
                 else
                 {
+                    printf("ENTROU");
                     i++;
                     sprintf(dec_to_str, "%d", i + 1);
                 }
-            }
+            }*/
+
+            //puts(inputs);puts(outputs);
+
             // write inputs on mote[]
-            token = strtok(inputs, ",");
+            token = strtok_r(inputs, ",", &identifier1);
+
+            // Check mote_id
+            char insert_tb_mote[5];
+
+            strcpy(insert_tb_mote, &token[strlen(token) - 1]);
+            //printf("%s\n",insert_tb_mote);
+            strcat(insert_tb_mote, "|");
+            strcat(insert_tb_mote, insert_tb_section);
+            //printf("MOTE  %s\n",insert_tb_mote);
+
+            //DB INSERT table: MOTE
+            // Só insere se nao existir
+
+            insert_values("mote", insert_tb_mote);
+            //printf("INSERIU MOTE\n");
+
+            char mote_id[2];
+            strncpy(mote_id, insert_tb_mote, 1);
+            mote_id[1] = '\0';
+            i = atoi(insert_tb_section) - 1;
+
+            char insert_tb_sensor[50];
+
             while (token != NULL)
             {
+                // DB INSERT table: SENSOR
+                // Só insere se nao existir
+                //printf("sensors_token:%s\n",token);
+
+                strcpy(insert_tb_sensor, "'");
+                strcat(insert_tb_sensor, token);
+                strcat(insert_tb_sensor, "'");
+                strcat(insert_tb_sensor, "|");
+                strcat(insert_tb_sensor, mote_id);
+
+                //printf("SENSOR %s\n",insert_tb_sensor);
+                insert_values("sensor", insert_tb_sensor);
+                //printf("INSERIU SENSOR\n");
+                //printf("\n");
+                //printf("sensor:%s  valor de i:%d\n",token,i);
                 strcpy(motes[i].pos[j].name, token);
+                //printf("teste:%s\n",motes[i].pos[j].name);
                 j++;
-                token = strtok(NULL, ",");
+                token = strtok_r(NULL, ",", &identifier1);
+                //printf("tokk:%s\n",token);
             }
             j = 0;
 
             // write outputs on outputs_vector[]
-            token = strtok(outputs, ",");
+            token = strtok_r(outputs, ",", &identifier1);
 
             while (token != NULL && cnt < N_ACTUATORS)
             {
 
+                // DB INSERT table: ACTUATOR
+                // Só insere se nao existir
+
+                char insert_tb_actuator[50];
+
+                strcpy(insert_tb_actuator, "'");
+                strcat(insert_tb_actuator, token);
+                strcat(insert_tb_actuator, "'");
+                strcat(insert_tb_actuator, "|");
+                strcat(insert_tb_actuator, insert_tb_section);
+                //printf("ACTUATOR %s\n",insert_tb_actuator);
+                insert_values("actuator", insert_tb_actuator);
+                //printf("INSERIU ACTUADOR\n");
+
                 strcpy(outputs_vetor[cnt].name, token);
                 cnt++;
-                token = strtok(NULL, ",");
+                token = strtok_r(NULL, ",", &identifier1);
             }
         }
         else
@@ -677,6 +767,7 @@ void check_OK(void)
     printf("\n");
     return;
 }
+
 int load_rules(int n)
 {
 
@@ -694,8 +785,18 @@ int load_rules(int n)
     char subject2[MAX_CHAR];
     char predicate[MAX_CHAR];
 
+    int rule_i = 0;
+    int subrule_i = 0;
+
     while (fgets(line, 2 * MAX_CHAR, f) != NULL && k < MAX_RULES)
     {
+        char insert_tb_subrule1[50];
+        insert_tb_subrule1[0] = '\0';
+        char insert_tb_subrule2[50];
+        insert_tb_subrule2[0] = '\0';
+        char insert_tb_op_r_subr[50];
+        insert_tb_op_r_subr[0] = '\0';
+
         //printf("%s\n", line);
         j = 0;
         int is_and = 0, is_or = 0;
@@ -712,12 +813,16 @@ int load_rules(int n)
         // j related to pos[] in layout struct (whats sensor; 0(volt) etc)
         // k  related to position in RULES vector
         sprintf(dec_to_str, "%d", i);
+        //printf("://%s\n", dec_to_str);
+
         while (i <= N_MOTES)
         {
+
             if (strstr(token, dec_to_str) != NULL)
             {
-
+                //printf("token %s\n",token);
                 token = strtok(NULL, " ");
+                //printf("token %s\n",token);
 
                 if (strcpy(subject, token) == NULL)
                 {
@@ -725,6 +830,7 @@ int load_rules(int n)
                     fclose(f);
                     return -1;
                 }
+
                 //puts(token);
 
                 if (is_and == 0 && is_or == 0)
@@ -740,14 +846,19 @@ int load_rules(int n)
                         fclose(f);
                         return -1;
                     }
-
+                    //puts(subject);puts(predicate);
                     break;
                 }
                 else
                 {
 
                     token = strtok(NULL, " ");
+
+                    //puts(token);
+
                     token = strtok(NULL, " ");
+
+                    //puts(token);
 
                     if (strcpy(subject2, token) == NULL)
                     {
@@ -759,6 +870,8 @@ int load_rules(int n)
 
                     token = strtok(NULL, "\0");
 
+                    //puts(token);
+
                     if (strcpy(predicate, token) == NULL)
                     {
 
@@ -767,14 +880,46 @@ int load_rules(int n)
                         return -1;
                     }
 
-                    //puts(subject);printf("AND?%d\n",is_and);puts(subject2);puts(predicate);
+                    //puts(subject);
+                    //printf("AND?%d\n",is_and);
+
+                    char Op_between_rules[4];
+                    if (is_and == 1 && is_or == 0)
+                        strcpy(Op_between_rules, "AND");
+                    else if (is_and == 0 && is_or == 1)
+                        strcpy(Op_between_rules, "OR");
+
+                    char rule_id[256];
+                    sprintf(rule_id, "%d", rule_i);
+
+                    //int subrule_i_aux= subrule_i-1;
+                    int subrule_i_aux = subrule_i;
+
+                    //printf("%d \n", subrule_i);
+                    char subrule_id[256];
+                    sprintf(subrule_id, "%d", subrule_i_aux);
+
+                    strcpy(insert_tb_op_r_subr, subrule_id);
+                    strcat(insert_tb_op_r_subr, "|");
+                    strcat(insert_tb_op_r_subr, rule_id);
+                    strcat(insert_tb_op_r_subr, "|");
+                    strcat(insert_tb_op_r_subr, "'");
+                    strcat(insert_tb_op_r_subr, Op_between_rules);
+                    strcat(insert_tb_op_r_subr, "'");
+
+                    //insert_values(conn,"op_r_subr","subrule_id,op_between_rules,rule_id",insert_tb_op_r_subr);
+
+                    //puts(subject2);
+                    //puts(predicate);
                     break;
                 }
             }
             else
             {
-
+                //printf("ENTROU\n");
+                //printf("i value:%d\n",i);
                 i++;
+                dec_to_str[0] = '\0';
                 sprintf(dec_to_str, "%d", i);
             }
             //printf("Sucess Mote:%d\n", i );
@@ -786,8 +931,9 @@ int load_rules(int n)
 
         while (1)
         {
+
             // Load 1st part --> Sensor;Oper;Ref
-            // puts(subject);
+            //puts(subject);
             //puts(predicate);
             //printf("%s\n",motes[i].pos[j].name);
             //printf("STRSTR__%s\n",strstr(subject, motes[i].pos[j].name));
@@ -797,7 +943,37 @@ int load_rules(int n)
                 rules_vec[k].sensor = &motes[i].pos[j];
                 rules_vec[k].operation = subject[strlen(motes[i].pos[j].name)];
                 //printf("%c\n", rules_vec[k].operation);
+                char operation1[2];
+                strcpy(operation1, &rules_vec[k].operation);
+                //printf("%d\n", rules_vec[k].ref);
                 sscanf(&subject[strlen(motes[i].pos[j].name) + 1], "%d", &rules_vec[k].ref);
+                //printf("%d\n", rules_vec[k].ref);
+                //printf("%s\n", motes[i].pos[j].name);
+
+                char ref_value1[4];
+                sprintf(ref_value1, "%d", rules_vec[k].ref);
+
+                char SENSOR_NAME1[7];
+                strcpy(SENSOR_NAME1, motes[i].pos[j].name);
+
+                char subrule_id[256];
+                sprintf(subrule_id, "%d", subrule_i);
+
+                strcpy(insert_tb_subrule1, subrule_id);
+                strcat(insert_tb_subrule1, "|");
+                strcat(insert_tb_subrule1, "'");
+                strcat(insert_tb_subrule1, SENSOR_NAME1);
+                strcat(insert_tb_subrule1, "'");
+                strcat(insert_tb_subrule1, "|");
+                strcat(insert_tb_subrule1, "'");
+                strcat(insert_tb_subrule1, operation1);
+                strcat(insert_tb_subrule1, "'");
+                strcat(insert_tb_subrule1, "|");
+                strcat(insert_tb_subrule1, ref_value1);
+
+                subrule_i++;
+
+                //insert_values(conn,"subrule","subrule_id,operation,ref_value,name",insert_tb_subrule1);
 
                 if (is_and == 1 || is_or == 1)
                 {
@@ -847,6 +1023,7 @@ int load_rules(int n)
         i = 0;
         while (1)
         {
+
             if (rules_vec[k].is_complex == 0)
                 break;
             // Load 2nd part --> Sensor2;Oper2;Ref2
@@ -858,7 +1035,35 @@ int load_rules(int n)
                 rules_vec[k].sensor2 = &motes[i].pos[j];
                 rules_vec[k].operation2 = subject2[strlen(motes[i].pos[j].name)];
                 //printf("%c\n", rules_vec[k].operation2);
+                char operation2[2];
+                strcpy(operation2, &rules_vec[k].operation2);
+
                 sscanf(&subject2[strlen(motes[i].pos[j].name) + 1], "%d", &rules_vec[k].ref2);
+
+                char ref_value2[4];
+                sprintf(ref_value2, "%d", rules_vec[k].ref2);
+
+                char SENSOR_NAME2[7];
+                strcpy(SENSOR_NAME2, motes[i].pos[j].name);
+
+                char subrule_id[256];
+                sprintf(subrule_id, "%d", subrule_i);
+
+                strcpy(insert_tb_subrule2, subrule_id);
+                strcat(insert_tb_subrule2, "|");
+                strcat(insert_tb_subrule2, "'");
+                strcat(insert_tb_subrule2, SENSOR_NAME2);
+                strcat(insert_tb_subrule2, "'");
+                strcat(insert_tb_subrule2, "|");
+                strcat(insert_tb_subrule2, "'");
+                strcat(insert_tb_subrule2, operation2);
+                strcat(insert_tb_subrule2, "'");
+                strcat(insert_tb_subrule2, "|");
+                strcat(insert_tb_subrule2, ref_value2);
+
+                subrule_i++;
+
+                //insert_values(conn,"subrule","subrule_id,operation,ref_value,name",insert_tb_subrule2);
                 break;
             }
             else
@@ -894,9 +1099,92 @@ int load_rules(int n)
 
             if (strstr(predicate, outputs_vetor[j].name) != NULL)
             {
-                // printf("%s %s\n",predicate,outputs_vetor[j].name);
+                //printf("1\n");
+                //printf("%s\n",predicate);
+                //printf("%s\n",outputs_vetor[j].name);
+                char ACTUATOR_NAME[20];
+                strcpy(ACTUATOR_NAME, outputs_vetor[j].name);
+
+                char rule_id[256];
+                sprintf(rule_id, "%d", rule_i);
+                char ptr[10];
+                if(strstr(predicate,"ON ")!=NULL){
+                    strcpy(ptr,"TRUE");
+                }
+                else if(strstr(predicate,"OFF ")!=NULL){
+                    strcpy(ptr,"FALSE");
+                }
+                
+
+                char insert_tb_rule[50];
+
+                strcpy(insert_tb_rule, rule_id);
+                strcat(insert_tb_rule, "|");
+                strcat(insert_tb_rule, "'");
+                strcat(insert_tb_rule, ACTUATOR_NAME);
+                strcat(insert_tb_rule, "'");
+                strcat(insert_tb_rule, "|");
+                strcat(insert_tb_rule,ptr);
+
+                //printf("1\n");
+                //printf("%s\n", insert_tb_rule);
+                insert_values("rule", insert_tb_rule);
+                rule_i++;
+
+                //printf("%s\n", insert_tb_subrule1);
+                if (insert_tb_subrule1[0] != '\0')
+                {
+                    //printf("ENTROU\n");
+                    insert_values("subrule", insert_tb_subrule1);
+                    //printf("%s", insert_tb_subrule1);
+                }
+
+                if (insert_tb_subrule2[0] != '\0')
+                {
+                    insert_values("subrule", insert_tb_subrule2);
+                    //printf("%s", insert_tb_subrule2);
+                }
+
+                if (insert_tb_op_r_subr[0] != '\0')
+                {
+                    insert_values("op_r_subr", insert_tb_op_r_subr);
+
+                    char subrule_id[256];
+                    int subrule_i_aux = subrule_i - 1;
+                    sprintf(subrule_id, "%d", subrule_i_aux);
+                    strcpy(insert_tb_op_r_subr, subrule_id);
+                    strcat(insert_tb_op_r_subr, "|");
+                    strcat(insert_tb_op_r_subr, rule_id);
+                    strcat(insert_tb_op_r_subr, "|");
+                    strcat(insert_tb_op_r_subr, "NULL");
+
+                    insert_values("op_r_subr", insert_tb_op_r_subr);
+                    //printf("%s\n", insert_tb_op_r_subr);
+                }
+                else if (insert_tb_op_r_subr[0] == '\0')
+                {
+
+                    int subrule_i_aux = subrule_i - 1;
+                    char subrule_id[256];
+                    sprintf(subrule_id, "%d", subrule_i_aux);
+
+                    strcpy(insert_tb_op_r_subr, subrule_id);
+                    strcat(insert_tb_op_r_subr, "|");
+                    strcat(insert_tb_op_r_subr, rule_id);
+                    strcat(insert_tb_op_r_subr, "|");
+                    strcat(insert_tb_op_r_subr, "NULL");
+
+                    //printf("%s\n", insert_tb_op_r_subr);
+                    insert_values("op_r_subr", insert_tb_op_r_subr);
+                }
+
+                //insert_values("subrule", "15|'TEMP2'|'<'|200");
+
                 char *token = strtok(predicate, ":");
+
+                //puts(token);
                 token = strtok(NULL, ":");
+                //puts(token);
                 if (token == NULL)
                 {
                     break;
@@ -935,7 +1223,7 @@ int load_rules(int n)
             }
         }
 
-        i = 0;
+        i = 1;
     }
 
     i = 0;
@@ -957,6 +1245,7 @@ int load_rules(int n)
     fclose(f);
     return k;
 }
+
 void print_mote(void)
 {
 
@@ -1240,7 +1529,7 @@ void write_2_RGB()
     free(str);
 }
 
-void outputs_update(int n_rules)
+void outputs_update(int n_rules, int n)
 {
 
     for (int i = 0; i < n_rules; i++)
@@ -1300,6 +1589,61 @@ void outputs_update(int n_rules)
             }
         }
     }
+
+    //DB PART
+    char insert_tb_actuator_vec[100];
+
+    //printf("#######\n");
+    //printf("CHECK OUTPUTS\n");
+
+    for (int i = 0; i < n; i++)
+    {
+
+        strcpy(insert_tb_actuator_vec, "CURRENT_TIMESTAMP|");
+
+        //printf(" %s ON:%d OFF:%d \n", outputs_vetor[i].name, outputs_vetor[i].on, outputs_vetor[i].off);
+        if (outputs_vetor[i].on == 1 && outputs_vetor[i].off == 0 && outputs_history[i] == 0)
+        {
+
+            strcat(insert_tb_actuator_vec, "'");
+            strcat(insert_tb_actuator_vec, outputs_vetor[i].name);
+            strcat(insert_tb_actuator_vec, "'");
+            strcat(insert_tb_actuator_vec, "|");
+            strcat(insert_tb_actuator_vec, "TRUE");
+            outputs_history[i] = outputs_vetor[i].on;
+            //printf("%s\n",insert_tb_actuator_vec);
+            insert_values("actuator_vec", insert_tb_actuator_vec);
+            insert_tb_actuator_vec[0] = '\0';
+        }
+        else if (outputs_vetor[i].on == 0 && outputs_vetor[i].off == 1 && outputs_history[i] == 1)
+        {
+
+            strcat(insert_tb_actuator_vec, "'");
+            strcat(insert_tb_actuator_vec, outputs_vetor[i].name);
+            strcat(insert_tb_actuator_vec, "'");
+            strcat(insert_tb_actuator_vec, "|");
+            strcat(insert_tb_actuator_vec, "FALSE");
+            outputs_history[i] = outputs_vetor[i].on;
+            //printf("%s\n",insert_tb_actuator_vec);
+            insert_values("actuator_vec", insert_tb_actuator_vec);
+            insert_tb_actuator_vec[0] = '\0';
+        }
+        else if (outputs_vetor[i].on == 0 && outputs_vetor[i].off == 0 && outputs_history[i] == 1)
+        {
+
+            strcat(insert_tb_actuator_vec, "'");
+            strcat(insert_tb_actuator_vec, outputs_vetor[i].name);
+            strcat(insert_tb_actuator_vec, "'");
+            strcat(insert_tb_actuator_vec, "|");
+            strcat(insert_tb_actuator_vec, "FALSE");
+            outputs_history[i] = outputs_vetor[i].on;
+            // printf("%s\n",insert_tb_actuator_vec);
+            insert_values("actuator_vec", insert_tb_actuator_vec);
+            insert_tb_actuator_vec[0] = '\0';
+        }
+    }
+    // printf("#######\n");
+    return;
 }
 
 void measure_power(float **vec_sec, float **vec_hour, int moteID, float volt, float light, float curr, float temp, float humi)
@@ -1433,25 +1777,326 @@ void measure_power(float **vec_sec, float **vec_hour, int moteID, float volt, fl
     }
 }
 
-void establish_DB_connection(PGconn *conn , PGresult *res ,const char *dbconn)
+int insert_values(char *table_name, char *values)
 {
+
+    char columns[10][10];
+
+    char *token;
+
+    char execution[100] = "INSERT INTO ";
+    strcat(execution, table_name);
+    //printf("%s\n",execution);
+    //strcat(execution, " (");
+
+    int i = 0;
+
+    strcat(execution, " VALUES (");
+    //printf("%s\n",execution);
+
+    token = strtok(values, "|");
+
+    while (token != NULL)
+    {
+
+        strcat(execution, token);
+        //printf("%s\n",execution);
+        //printf("%s\n",token);
+        token = strtok(NULL, "|");
+        if (token != NULL)
+        {
+            strcat(execution, ",");
+        }
+    }
+
+    strcat(execution, ");");
+    //printf("%s\n",execution);
+
+    res = PQexec(conn, execution);
+
+    return PQresultStatus(res) == PGRES_COMMAND_OK;
+}
+
+//void delete_values (PGconn *conn, char *table_name, char *PRIMARY_KEY, int id)
+/*{
+    //"DELETE FROM employee WHERE id = "
+
+    char execution [100] ="DELETE FROM ";
+    strcat(execution, table_name);
+    strcat(execution, " WHERE ");
+    strcar (execution, PRIMARY_KEY);
+    strcat(execution," = ");
     
+    strcat(execution, itoa(id));
+    
+
+    PGresult *res = PQexec(conn, execution);
+
+    return PQresultStatus(res) == PGRES_COMMAND_OK;
+}*/
+
+void clear_table(char *table_name, char *task)
+{
+
+    if (strstr(task, "ALL") != NULL)
+    {
+
+        char table_names[10][15];
+        strcpy(table_names[0], "SENSOR_VEC");
+        strcpy(table_names[1], "SECTION");
+        strcpy(table_names[2], "MOTE");
+        strcpy(table_names[3], "SENSOR");
+        strcpy(table_names[4], "SUBRULE");
+        strcpy(table_names[5], "OP_R_SUBR");
+        strcpy(table_names[6], "RULE");
+        strcpy(table_names[7], "ACTUATOR");
+        strcpy(table_names[8], "ACTUATOR_VEC");
+
+        int i = 0;
+
+        while (i < 9)
+        {
+            char execution[100] = "DELETE FROM ";
+            strcat(execution, table_names[i]);
+            strcat(execution, " CASCADE");
+            res = PQexec(conn, execution);
+            if (!res)
+            {
+                printf(" ERROR DELETING ALL TABLES \n");
+                PQfinish(conn);
+                exit(1);
+            }
+            i++;
+        }
+        printf("ALL TABLES CLEAR!! \n");
+        return;
+    }
+    else
+    {
+
+        char command[100] = "DELETE FROM ";
+        strcat(command, table_name);
+        strcat(command, " CASCADE");
+
+        PGresult *res = PQexec(conn, command);
+        if (!res)
+        {
+
+            printf("Error DELETING TABLE %s\n", table_name);
+            PQfinish(conn);
+            exit(1);
+        }
+        printf("TABLE %s CLEAR!! \n", table_name);
+        return;
+    }
+}
+
+void drop_all(void)
+{
+    //DROP TABLE <table_name> CASCADE
+
+    char table_names[10][15];
+    strcpy(table_names[0], "SENSOR_VEC");
+    strcpy(table_names[1], "SECTION");
+    strcpy(table_names[2], "MOTE");
+    strcpy(table_names[3], "SENSOR");
+    strcpy(table_names[4], "SUBRULE");
+    strcpy(table_names[5], "OP_R_SUBR");
+    strcpy(table_names[6], "RULE");
+    strcpy(table_names[7], "ACTUATOR");
+    strcpy(table_names[8], "ACTUATOR_VEC");
+
+    int i = 0;
+    while (i < 9)
+    {
+        char execution[100] = "DROP TABLE  ";
+        strcat(execution, table_names[i]);
+        strcat(execution, " CASCADE");
+        res = PQexec(conn, execution);
+        if (!res)
+        {
+
+            printf("Error DROPING ALL \n");
+            PQfinish(conn);
+            exit(1);
+        }
+
+        i++;
+    }
+
+    return;
+}
+
+void DDL_creation(void)
+{
+
+    FILE *f = fopen("DDL.sql", "r");
+    if (f == NULL)
+    {
+        printf("Error opening DDL\n");
+        return;
+    }
+
+    char line[2000];
+    fgets(line, 1999, f); //devido ao schema ja existir
+    while (fgets(line, 1999, f) != NULL)
+    {
+
+        //printf("%s",line);
+        res = PQexec(conn, line);
+        if (!res)
+        {
+
+            printf("Error CREATING TABLES \n");
+            PQfinish(conn);
+            exit(1);
+        }
+    }
+    return;
+}
+
+void query(void)
+{
+
+    FILE *f;
+    f = fopen("queries.txt", "r");
+    char line[2001];
+    while (fgets(line, 2000, f) != NULL)
+    {
+        res = PQexec(conn, line);
+
+        if (PQresultStatus(res) != PGRES_TUPLES_OK)
+        {
+
+            printf("Error Search Values \n");
+        }
+        else
+        {
+
+            for (int i = 0; i < PQntuples(res); i++)
+            {
+
+                for (int j = 0; j < PQnfields(res); j++)
+                {
+
+                    printf("%s",PQgetvalue(res, i, j));
+
+                    if (j + 1 >= PQnfields(res) && i + 1 < PQntuples(res))
+                    {
+                        printf("\n");
+                    }
+                    else
+                    {
+                        printf(" ");
+                    }
+                }
+            }
+        }
+    }
+    printf("\n");
+    return;
+}
+
+/*char *search_value(char *table_name, char *ident, char *value)
+{
+
+    
+    //SELECT first_name, last_name FROM students WHERE mark >= 15;
+
+    char execution[100] = "SELECT * ";
+    char retorno[20][100];
+
+    //strcat(execution, parametros);
+    strcat(execution, "FROM ");
+    strcat(execution, table_name);
+    strcat(execution, " WHERE ");
+    strcat(execution, ident);
+    strcat(execution, " = ");
+    //char aux [10];
+    //gcvt(value,6,aux);
+    strcat(execution, value);
+
+    res = PQexec(conn, execution);
+
+    if (PQresultStatus(res) != PGRES_TUPLES_OK)
+    {
+
+        printf("Error Search Values 1\n");
+
+        return NULL;
+    }
+    else
+    {
+
+        for (int i = 0; i < PQntuples(res); i++)
+        {
+
+            for (int j = 0; j < PQnfields(res); j++)
+            {
+
+                strcat(retorno[i], PQgetvalue(res, i, j));
+
+                if (j + 1 >= PQnfields(res) && i + 1 < PQntuples(res))
+                {
+                    strcat(retorno[i], "||");
+                }
+                else
+                {
+                    strcat(retorno[i], ", ");
+                }
+            }
+        }
+    }
+
+    PQclear(res);
+    printf("%s",retorno[0]);
+
+    //return retorno;
+}*/
+
+//void update_values (PGconn *conn, char *table_name, char *PRIMARY_KEY, int id, char *column, float value)
+/*{
+    //UPDATE students SET age = 17 WHERE id = 7
+
+    char execution [100] ="UPDATE ";
+    strcat(execution, table_name);
+    strcat(execution, " SET ");
+    strcat(execution, column);
+    strcat(execution, " = ");
+    strcat(execution, itoa(value));
+    strcat(execution, " WHERE ");
+    strcat(execution, PRIMARY_KEY);
+    strcat(execution, " = ");
+    strcat(execution, itoa(id));
+
+    PGresult *res = PQexec(conn, execution);
+
+    return PQresultStatus(res) == PGRES_COMMAND_OK;
+
+    
+}
+*/
+
+int main()
+{
+    FILE *f_terminal;
+
     dbconn = "host = 'db.fe.up.pt' dbname = 'sinf2021a35' user = 'sinf2021a35' password = 'ZbnBodLV'";
     //EXAMPLE : dbconn = "host = 'db.fe.up.pt' dbname = 'sinf1920e32' user = 'sinf1920e32' password = 'QWTTIjZl'";
 
     conn = PQconnectdb(dbconn);
-    //PQexec(conn, "SET search_path TO testing");
+    PQexec(conn, "SET search_path TO gman_a35,public");
 
     if (!conn)
     {
-        printf(stderr, "libpq error: PQconnectdb returned NULL. \n\n");
+        printf("libpq error: PQconnectdb returned NULL. \n\n");
         PQfinish(conn);
         exit(1);
     }
 
     else if (PQstatus(conn) != CONNECTION_OK)
     {
-        printf(stderr, "Connection to DB failed: %s", PQerrorMessage(conn));
+        printf("Connection to DB failed: %s", PQerrorMessage(conn));
         PQfinish(conn);
         exit(1);
     }
@@ -1459,26 +2104,28 @@ void establish_DB_connection(PGconn *conn , PGresult *res ,const char *dbconn)
     else
     {
         printf("Connection OK \n");
-        //res = PQexec(conn, "INSERT INTO test_1920 (id, name, age) VALUES (1, 'Jane Doe', 32)");
-        PQfinish(conn);
+        /*res = PQexec(conn, "INSERT INTO section VALUES (1)");
+        if( PQresultStatus(res) == PGRES_COMMAND_OK) 
+            printf("Resultou\n");
+        */
     }
-    return;
-}
-int main()
-{
-    FILE *f_terminal;
 
-    PGconn *conn;
-    PGresult *res;
-    const char *dbconn;
+    // LIMPAR HISTORICO EM MEMORIA
+    clear_table(" ", "ALL");
+    //drop_all();
+    //DDL_creation();
 
-    establish_DB_connection(conn,res,dbconn);
-    return 0;
+    time_t atual_time;
 
     int n_atuadores = load_sensorconfig();
     time(&old);
     //check_OK();
     int rules_number = load_rules(n_atuadores);
+    
+    //TEST QUERY
+    //query();
+    //return 0;
+
     int moteID;
     float voltage, light, current, temperature, rel_humidity, humidity_temp;
 
@@ -1517,20 +2164,32 @@ int main()
         for (j = 0; j < N_MOTES; j++)
             power_hour[i][j] = 0;
 
+    f_terminal = fopen("/tmp/ttyV10", "r");
+
+    if (f_terminal == NULL)
+    {
+        printf("Error terminal ttyV10\n");
+        exit(EXIT_FAILURE);
+    }
+    time_t DB_update_t1, DB_update_t2;
+    double diff_time;
+
+    time(&DB_update_t1);
+    int n_mote = 0;
+
     while (1)
     {
-        f_terminal = fopen("/tmp/ttyV10", "r");
+        //Assume-se q se executa sempre a mote1 antes de executar a mote2 (mote2=>mote1), se executar so a mote2 da erro
 
-        if (f_terminal == NULL)
+        if (n_mote < moteID)
         {
-            printf("Error terminal ttyV10\n");
-            exit(EXIT_FAILURE);
+            n_mote = moteID;
         }
 
         if (fgets(str, MAX_CHAR, f_terminal) != NULL)
         {
             //printf("Passed\n");
-            //printf("VALOR_LIDO: %s", str);
+            // printf("VALOR_LIDO: %s", str);
             if (check_message_start() == 1)
             {
                 moteID = (int)get_num_dec(15);
@@ -1546,28 +2205,173 @@ int main()
                     temperature = temperature * 10;
                 }
                 int j = 0;
+
+                time(&DB_update_t2);
+                diff_time = difftime(DB_update_t2, DB_update_t1);
+
+                if (diff_time > 5)
+                {
+                    if (N_MOTES - moteID == 0)
+                        DB_update_t1 = DB_update_t2;
+                    // falta rever a parte de inserir em todos os segundo se so houvesse 1 mote
+                    else if (n_mote == 1 && diff_time > 5)
+                    {
+                        DB_update_t1 = DB_update_t2;
+                    }
+                }
+
                 while (j < N_SENSOR_MOTE)
                 {
 
                     if (strstr(motes[moteID - 1].pos[j].name, "VOLT") != NULL)
                     {
                         motes[moteID - 1].pos[j].value = voltage;
+                        //DB part
+                        //only updates 5 in 5 seconds
+                        if (diff_time > 5)
+                        {
+                            char sensor[10] = "VOLT";
+                            char n[2];
+
+                            sprintf(n, "%d", moteID);
+                            strcat(sensor, n);
+                            //printf("%s\n",sensor);
+
+                            //if VOLT_i exists on DB then
+                            char insert_to_sensor_vec[100] = "CURRENT_TIMESTAMP|";
+                            char value[8];
+
+                            sprintf(value, "%.2f", voltage);
+
+                            strcat(insert_to_sensor_vec, value);
+                            strcat(insert_to_sensor_vec, "|");
+                            strcat(insert_to_sensor_vec, "'");
+                            strcat(insert_to_sensor_vec, sensor);
+                            strcat(insert_to_sensor_vec, "'");
+                            //printf("%s\n",insert_to_sensor_vec);
+                            insert_values("sensor_vec", insert_to_sensor_vec);
+                        }
                     }
                     else if (strstr(motes[moteID - 1].pos[j].name, "LIGHT") != NULL)
                     {
                         motes[moteID - 1].pos[j].value = light;
+                        //DB Part
+                        //only updates 5 in 5 seconds
+
+                        if (diff_time > 5)
+                        {
+                            //DB CODE
+                            char sensor[10] = "LIGHT";
+                            char n[2];
+
+                            sprintf(n, "%d", moteID);
+                            strcat(sensor, n);
+                            //printf("%s\n",sensor);
+
+                            //if LIGHT_i exists on DB then
+                            char insert_to_sensor_vec[100] = "CURRENT_TIMESTAMP|";
+                            char value[8];
+
+                            sprintf(value, "%.2f", light);
+
+                            strcat(insert_to_sensor_vec, value);
+                            strcat(insert_to_sensor_vec, "|");
+                            strcat(insert_to_sensor_vec, "'");
+                            strcat(insert_to_sensor_vec, sensor);
+                            strcat(insert_to_sensor_vec, "'");
+                            //printf("%s\n",insert_to_sensor_vec);
+                            insert_values("sensor_vec", insert_to_sensor_vec);
+                        }
                     }
                     else if (strstr(motes[moteID - 1].pos[j].name, "CURR") != NULL)
                     {
                         motes[moteID - 1].pos[j].value = current;
+                        //DB Part
+
+                        if (diff_time > 5)
+                        {
+                            //DB CODE
+                            char sensor[10] = "CURR";
+                            char n[2];
+
+                            sprintf(n, "%d", moteID);
+                            strcat(sensor, n);
+                            //printf("%s\n",sensor);
+
+                            //if CURR_i exists on DB then
+                            char insert_to_sensor_vec[100] = "CURRENT_TIMESTAMP|";
+                            char value[8];
+
+                            sprintf(value, "%.2f", current);
+
+                            strcat(insert_to_sensor_vec, value);
+                            strcat(insert_to_sensor_vec, "|");
+                            strcat(insert_to_sensor_vec, "'");
+                            strcat(insert_to_sensor_vec, sensor);
+                            strcat(insert_to_sensor_vec, "'");
+                            //printf("%s\n",insert_to_sensor_vec);
+                            insert_values("sensor_vec", insert_to_sensor_vec);
+                        }
                     }
                     else if (strstr(motes[moteID - 1].pos[j].name, "TEMP") != NULL)
                     {
                         motes[moteID - 1].pos[j].value = temperature;
+                        //DB Part
+
+                        if (diff_time > 5)
+                        {
+                            //DB CODE
+                            char sensor[10] = "TEMP";
+                            char n[2];
+
+                            sprintf(n, "%d", moteID);
+                            strcat(sensor, n);
+                            //printf("%s\n",sensor);
+
+                            //if TEMP_i exists on DB then
+                            char insert_to_sensor_vec[100] = "CURRENT_TIMESTAMP|";
+                            char value[8];
+
+                            sprintf(value, "%.2f", temperature);
+
+                            strcat(insert_to_sensor_vec, value);
+                            strcat(insert_to_sensor_vec, "|");
+                            strcat(insert_to_sensor_vec, "'");
+                            strcat(insert_to_sensor_vec, sensor);
+                            strcat(insert_to_sensor_vec, "'");
+                            //printf("%s\n",insert_to_sensor_vec);
+                            insert_values("sensor_vec", insert_to_sensor_vec);
+                        }
                     }
                     else if (strstr(motes[moteID - 1].pos[j].name, "HUM") != NULL)
                     {
                         motes[moteID - 1].pos[j].value = humidity_temp;
+                        //DB Part
+
+                        if (diff_time > 5)
+                        {
+                            //DB CODE
+                            char sensor[10] = "HUM";
+                            char n[2];
+
+                            sprintf(n, "%d", moteID);
+                            strcat(sensor, n);
+                            //printf("%s\n",sensor);
+
+                            //if CURR_i exists on DB then
+                            char insert_to_sensor_vec[100] = "CURRENT_TIMESTAMP|";
+                            char value[8];
+
+                            sprintf(value, "%.2f", humidity_temp);
+
+                            strcat(insert_to_sensor_vec, value);
+                            strcat(insert_to_sensor_vec, "|");
+                            strcat(insert_to_sensor_vec, "'");
+                            strcat(insert_to_sensor_vec, sensor);
+                            strcat(insert_to_sensor_vec, "'");
+                            //printf("%s\n",insert_to_sensor_vec);
+                            insert_values("sensor_vec", insert_to_sensor_vec);
+                        }
                     }
                     j++;
                 }
@@ -1582,11 +2386,15 @@ int main()
         if (init[moteID - 1] != 1)
         {
 
-            outputs_update(rules_number);
+            outputs_update(rules_number, n_atuadores);
             measure_power(power_sec, power_hour, moteID, voltage, light, current, temperature, humidity_temp);
+            //printf("PRE CHECK\n");
             check_values(old_actuator_value, n_atuadores, rules_number, moteID);
+            //printf("POS CHECK\n");
             new_values(moteID);
+            //printf("POS NEW\n");
             write_2_RGB();
+            //printf("POS RGB\n");
         }
         else
         {
@@ -1595,6 +2403,7 @@ int main()
         printf("\n");
     }
 
+    PQfinish(conn);
     fclose(f_terminal);
     free(power_hour);
     free(power_sec);
