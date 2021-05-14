@@ -622,6 +622,7 @@ int load_sensorconfig(void)
             //DB INSERT table: SECTION
             // Só insere se for nao existir
 
+
             strcpy(insert_tb_section, dec_to_str);
             //printf("SECTION %s\n",insert_tb_section);
             insert_values("section", insert_tb_section);
@@ -661,6 +662,8 @@ int load_sensorconfig(void)
             // write inputs on mote[]
             token = strtok_r(inputs, ",", &identifier1);
 
+             //DB INSERT table: MOTE
+            // Só insere se nao existir
             // Check mote_id
             char insert_tb_mote[5];
 
@@ -668,11 +671,8 @@ int load_sensorconfig(void)
             //printf("%s\n",insert_tb_mote);
             strcat(insert_tb_mote, "|");
             strcat(insert_tb_mote, insert_tb_section);
+
             //printf("MOTE  %s\n",insert_tb_mote);
-
-            //DB INSERT table: MOTE
-            // Só insere se nao existir
-
             insert_values("mote", insert_tb_mote);
             //printf("INSERIU MOTE\n");
 
@@ -2111,9 +2111,9 @@ int main()
     }
 
     // LIMPAR HISTORICO EM MEMORIA
-    clear_table(" ", "ALL");
-    //drop_all();
-    //DDL_creation();
+    //clear_table(" ", "ALL");
+    drop_all();
+    DDL_creation();
 
     time_t atual_time;
 
