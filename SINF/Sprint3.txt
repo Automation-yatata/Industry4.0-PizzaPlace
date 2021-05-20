@@ -4,8 +4,8 @@ EASY QUERY
 SENSOR DATA:
 
     SELECT alias.value AS measurement, alias.date AS timestamp 
-    FROM (SELECT sv.value, sv.date FROM sensor_vec AS sv, sensor AS s WHERE s.name='TEMP1' AND s.mote_id=1) AS alias 
-    WHERE alias.date BETWEEN '2021-05-14 10:58:05' AND '2021-05-14 10:58:59' 
+    FROM (SELECT sv.name_sens, sv.value, sv.date FROM sensor_vec AS sv, sensor AS s WHERE s.mote_id=1 AND sv.name_sens='TEMP1') AS alias 
+    WHERE alias.date BETWEEN '2021-05-14 10:58:05' AND '2021-05-15 10:58:59'
 
 ACTUATOR DATA:
 
