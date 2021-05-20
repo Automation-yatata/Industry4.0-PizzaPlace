@@ -2,7 +2,7 @@
 EASY QUERY 
 
 SENSOR DATA:
-
+    SET search_path TO gman_a35, public;
     SELECT alias.value AS measurement, alias.date AS timestamp 
     FROM (SELECT sv.name_sens, sv.value, sv.date FROM sensor_vec AS sv, sensor AS s WHERE s.mote_id=1 AND sv.name_sens='TEMP1') AS alias 
     WHERE alias.date BETWEEN '2021-05-14 10:58:05' AND '2021-05-15 10:58:59'
@@ -11,11 +11,13 @@ ACTUATOR DATA:
 
 
 CONFIGURATION DATA:
-
-SELECT t1.section_id,mote.mote_id  
-  FROM (SELECT section.section_id FROM section
-        ORDER BY section.section_id DESC) AS t1
-  JOIN mote ON t1.section_id!=mote.mote_id
+    SET search_path TO gman_a35, public;
+    UPDATE mote
+    SET section_id=t1.section_id
+    FROM(SELECT section.section_id FROM section
+          ORDER BY section.section_id DESC) AS t1
+    WHERE mote.section_id!=t1.section_id
+    RETURNING mote.mote_id,mote.section_id
 
 
 CONTROL RULE DATA:
