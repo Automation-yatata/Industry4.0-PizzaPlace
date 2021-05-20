@@ -23,28 +23,12 @@ ENERGY DATA:
 MEDIUM QUERY
 
 
-SELECT s.name,sv.name_sens,sec.section_id, sv.value FROM section AS sec 
-   JOIN mote AS m ON m.mote_id=sec.section_id
-   JOIN sensor AS s ON s.mote_id=m.mote_id AND SUBSTRING(s.name, 1, length(s.name)-1 ) = 'TEMP'
-   JOIN sensor_vec AS sv ON sv.name_sens=s.name
-ORDER BY s.mote_id
-
- SELECT AVG(sv.value)
-    FROM (SELECT s.name, s.mote_id FROM sensor AS s WHERE SUBSTRING(s.name, 1, length(s.name)-1 ) = 'TEMP') AS res, sensor_vec AS sv
-    WHERE sv.name_sens=res.name
- 
- UNION
-
- SELECT res.name AS room 
-   FROM (SELECT s.name, s.mote_id FROM sensor AS s WHERE SUBSTRING(s.name, 1, length(s.name)-1 ) = 'TEMP') AS res, sensor_vec AS sv
-   WHERE res.mote_id=1;
-   
-
-SENSOR DATA: //SELECT s.name FROM sensor AS s WHERE SUBSTRING(s.name, 1, length(s.name)-1 ) = 'TEMP'
-
-    SELECT AVG(sv.value)
-    FROM (SELECT s.name FROM sensor AS s WHERE SUBSTRING(s.name, 1, length(s.name)-1 ) = 'TEMP') AS res, sensor_vec AS sv
-    WHERE sv.name_sens=res.name;
+SENSOR DATA: 
+    SET search_path TO gman_a35,public;
+    SELECT CONCAT('SECTION',t1.section) AS ROOM, t1.average AS average
+      FROM (SELECT sensor_vec.name_sens AS section, AVG(sensor_vec.value) AS average FROM sensor_vec
+             GROUP BY sensor_vec.name_sens) AS t1, sensor
+      WHERE sensor.name=t1.section AND SUBSTRING(sensor.name, 1, length(sensor.name)-1 ) = 'TEMP'
 
 
 ACTUATOR DATA:
