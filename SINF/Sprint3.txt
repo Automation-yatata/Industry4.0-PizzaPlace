@@ -12,6 +12,11 @@ ACTUATOR DATA:
 
 CONFIGURATION DATA:
 
+SELECT t1.section_id,mote.mote_id  
+  FROM (SELECT section.section_id FROM section
+        ORDER BY section.section_id DESC) AS t1
+  JOIN mote ON t1.section_id!=mote.mote_id
+
 
 CONTROL RULE DATA:
 
