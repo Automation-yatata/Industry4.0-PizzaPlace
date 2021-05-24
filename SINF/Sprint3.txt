@@ -8,6 +8,13 @@ SENSOR DATA:
     WHERE alias.date BETWEEN '2021-05-14 10:58:05' AND '2021-05-15 10:58:59'
 
 ACTUATOR DATA:
+    SET search_path TO gman_a35, public;
+    select t.name_act as Actuator, actuator.section_id as Cell, t.state as State
+    from 
+        (select name_act, max(date) as MaxDate
+        from actuator_vec
+        group by name_act) AS tm, actuator_vec AS t, actuator
+    where t.date = tm.MaxDate and actuator.name = tm.name_act
 
 
 CONFIGURATION DATA:
@@ -51,7 +58,8 @@ ENERGY DATA:
 MEDIUM QUERY
 
 
-SENSOR DATA: 
+SENSOR DATA:
+
     SET search_path TO gman_a35,public;
     SELECT CONCAT('SECTION',t1.section) AS ROOM, t1.average AS average
       FROM (SELECT sensor_vec.name_sens AS section, AVG(sensor_vec.value) AS average FROM sensor_vec
@@ -63,6 +71,14 @@ ACTUATOR DATA:
 
 
 CONFIGURATION DATA:
+
+    SET search_path TO gman_a35, public;
+    SELECT  section.section_id AS Cell, COUNT(t1.mote_id) AS MoteCount, t2.count AS SensorCount
+    FROM section, 
+         (SELECT mote.section_id, mote_id FROM mote GROUP BY mote.section_id,mote_id) AS t1 , 
+         (SELECT COUNT(mote_id) AS count,mote_id FROM sensor GROUP BY sensor.mote_id,mote_id) AS t2
+    WHERE t1.section_id=section.section_id AND t2.mote_id=t1.section_id
+    GROUP BY section.section_id,t2.count
 
 
 CONTROL RULE DATA:
