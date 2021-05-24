@@ -52,6 +52,12 @@ _______CONFIGURATION DATA_________
 
 _______CONTROL RULE DATA_________
 
+SET search_path TO gman_a35, public;
+UPDATE subrule
+SET ref = 20
+from rule, actuator, op_r_subr
+where rule.name = actuator.name AND op_r_subr.subrule_id = subrule.subrule_id AND op_r_subr.rule_id = rule.rule_id AND rule.rule_id = 0
+returning rule.rule_id as Rule, actuator.section_id as Cell, subrule.ref as ReferenceValue, subrule.sensor_name
 
 
 _______ENERGY DATA_________
