@@ -68,6 +68,13 @@ SENSOR DATA:
 
 
 ACTUATOR DATA:
+    SET search_path TO gman_a35, public;
+    select CONCAT('SECTION', actuator.section_id) AS cell, count(name_act)-1 AS change
+    from actuator_vec, actuator
+    where actuator_vec.date between '2021-05-14 10:58:02.552664' AND '2021-05-15 10:58:31.724406' AND actuator_vec.name_act = actuator.name AND  
+          ( SUBSTRING(actuator.name,1,length(actuator.name)-9) = 'HEAT' OR SUBSTRING(actuator.name,1,length(actuator.name)-9) = 'FORNO' )
+    group by name_act, actuator.section_id
+    ORDER BY actuator.section_id ASC
 
 
 CONFIGURATION DATA:
