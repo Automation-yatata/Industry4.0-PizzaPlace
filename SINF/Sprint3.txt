@@ -1,13 +1,14 @@
 
-EASY QUERY 
+----------EASY QUERY------------ 
 
-SENSOR DATA:
+_______SENSOR DATA_________
     SET search_path TO gman_a35, public;
     SELECT alias.value AS measurement, alias.date AS timestamp 
     FROM (SELECT sv.name_sens, sv.value, sv.date FROM sensor_vec AS sv, sensor AS s WHERE s.mote_id=1 AND sv.name_sens='TEMP1') AS alias 
     WHERE alias.date BETWEEN '2021-05-14 10:58:05' AND '2021-05-15 10:58:59'
 
-ACTUATOR DATA:
+_______ACTUATOR DATA_________
+
     SET search_path TO gman_a35, public;
     select t.name_act as Actuator, actuator.section_id as Cell, t.state as State
     from 
@@ -16,8 +17,8 @@ ACTUATOR DATA:
         group by name_act) AS tm, actuator_vec AS t, actuator
     where t.date = tm.MaxDate and actuator.name = tm.name_act
 
+_______CONFIGURATION DATA_________
 
-CONFIGURATION DATA:
     SET search_path TO gman_a35, public;
     UPDATE mote
     SET section_id = CASE 
@@ -28,7 +29,7 @@ CONFIGURATION DATA:
       ORDER BY section.section_id DESC) AS t1
     RETURNING mote.mote_id AS Sensor,mote.section_id AS Cell
     
-///////////////////// TESTES
+//////////////////// TESTES
     SET search_path TO gman_a35, public;
     UPDATE mote
     SET section_id=t1.section_id
@@ -48,26 +49,29 @@ CONFIGURATION DATA:
     RETURNING mote.mote_id,mote.section_id
 ///////////////////
 
-CONTROL RULE DATA:
 
-
-ENERGY DATA:
+_______CONTROL RULE DATA_________
 
 
 
-MEDIUM QUERY
+_______ENERGY DATA_________
 
 
-SENSOR DATA:
+
+----------MEDIUM QUERY------------ 
+
+
+_______SENSOR DATA_________
 
     SET search_path TO gman_a35,public;
     SELECT CONCAT('SECTION',t1.section) AS ROOM, t1.average AS average
       FROM (SELECT sensor_vec.name_sens AS section, AVG(sensor_vec.value) AS average FROM sensor_vec
              GROUP BY sensor_vec.name_sens) AS t1, sensor
       WHERE sensor.name=t1.section AND SUBSTRING(sensor.name, 1, length(sensor.name)-1 ) = 'TEMP'
+      
 
+_______ACTUATOR DATA_________
 
-ACTUATOR DATA:
     SET search_path TO gman_a35, public;
     select CONCAT('SECTION', actuator.section_id) AS cell, count(name_act)-1 AS change
     from actuator_vec, actuator
@@ -75,9 +79,9 @@ ACTUATOR DATA:
           ( SUBSTRING(actuator.name,1,length(actuator.name)-9) = 'HEAT' OR SUBSTRING(actuator.name,1,length(actuator.name)-9) = 'FORNO' )
     group by name_act, actuator.section_id
     ORDER BY actuator.section_id ASC
+    
 
-
-CONFIGURATION DATA:
+_______CONFIGURATION DATA_________
 
     SET search_path TO gman_a35, public;
     SELECT  section.section_id AS Cell, COUNT(t1.mote_id) AS MoteCount, t2.count AS SensorCount
@@ -86,10 +90,13 @@ CONFIGURATION DATA:
          (SELECT COUNT(mote_id) AS count,mote_id FROM sensor GROUP BY sensor.mote_id,mote_id) AS t2
     WHERE t1.section_id=section.section_id AND t2.mote_id=t1.section_id
     GROUP BY section.section_id,t2.count
+    
+
+_______CONTROL RULE DATA_________
 
 
-CONTROL RULE DATA:
+
+_______ENERGY DATA_________
 
 
-ENERGY DATA:
 
