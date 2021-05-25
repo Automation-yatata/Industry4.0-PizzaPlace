@@ -63,6 +63,12 @@ _______CONTROL RULE DATA_________
 _______ENERGY DATA_________
 
 SET search_path TO gman_a35,public;
+SELECT timestamp as timestamp,name_sens,((value+5)*220*10^(-3)*4/3600) AS energy
+FROM sensor_vec 
+WHERE timestamp BETWEEN '2021-05-14 10:58:01' AND '2021-05-14 10:59:60'AND sensor_vec.name_sens="CURR1"
+ORDER BY timestamp ASC
+
+
 SELECT timestamp, energy FROM (
 SELECT timestamp, (Power*10^(-3)*5.555*10^(-7)) AS Energy, mote, name_act FROM
 
@@ -103,7 +109,7 @@ _______ACTUATOR DATA_________
 _______CONFIGURATION DATA_________
 
     SET search_path TO gman_a35, public;
-    SELECT  CONCAT('SECTION',section.section_id) AS room, COUNT(t1.mote_id) AS MoteCount, t2.count AS SensorCount
+    SELECT  CONCAT('SECTION',section.section_id) AS room, COUNT(t1.mote_id) AS "Mote Count", t2.count AS "Sensor Count"
     FROM section, 
          (SELECT mote.section_id, mote_id FROM mote GROUP BY mote.section_id,mote_id) AS t1 , 
          (SELECT COUNT(mote_id) AS count,mote_id FROM sensor GROUP BY sensor.mote_id,mote_id) AS t2
@@ -124,6 +130,14 @@ _______CONTROL RULE DATA_________
 _______ENERGY DATA_________
 
     SET search_path TO gman_a35,public;
+    
+    SELECT timestamp as timestamp,name_sens,SUM((value+5)*220*10^(-3)*4/3600) AS energy
+    FROM sensor_vec 
+    WHERE timestamp BETWEEN '2021-05-14 10:58:01' AND '2021-05-14 10:59:60'AND (sensor_vec.name_sens="TEMP1" OR sensor_vec.name_sens='TEMP2')
+    GROUP BY sensor_vec.name_sens,timestamp,energy
+    ORDER BY timestamp ASC
+
+    
     SELECT CONCAT('SECTION',mote) AS room, SUM (energy)*0.1544 AS cost FROM (
     SELECT timestamp, (Power*10^(-3)*5.555*10^(-7)) AS Energy, mote, name_act FROM
 
