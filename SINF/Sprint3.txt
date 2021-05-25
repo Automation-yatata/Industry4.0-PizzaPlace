@@ -114,7 +114,7 @@ _______CONFIGURATION DATA_________
 _______CONTROL RULE DATA_________
 
     SET search_path TO gman_a35, public;
-    select section.section_id as Cell, count(tm.section_id) as Rules
+    select CONCAT('SECTION',section.section_id) as room, count(tm.section_id) as Rules
     from (select rule.rule_id, rule.name, actuator.section_id from rule, actuator where rule.name = actuator.name) as tm, section
     where tm.section_id = section.section_id
     group by section.section_id, tm.section_id
@@ -124,7 +124,7 @@ _______CONTROL RULE DATA_________
 _______ENERGY DATA_________
 
     SET search_path TO gman_a35,public;
-    SELECT mote AS cell, SUM (energy)*0.1544 AS cost FROM (
+    SELECT CONCAT('SECTION',mote) AS room, SUM (energy)*0.1544 AS cost FROM (
     SELECT timestamp, (Power*10^(-3)*5.555*10^(-7)) AS Energy, mote, name_act FROM
 
          (
