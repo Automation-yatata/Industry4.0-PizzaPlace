@@ -62,7 +62,20 @@ returning rule.rule_id as Rule, actuator.section_id as Cell, subrule.ref as Refe
 
 _______ENERGY DATA_________
 
+SET search_path TO gman_a35,public;
+SELECT timestamp, energy FROM (
+SELECT timestamp, (Power*10^(-3)*5.555*10^(-7)) AS Energy, mote, name_act FROM
 
+     (
+     SELECT date AS timestamp, RIGHT(name_act,1) AS mote, name_act, state,
+        CASE WHEN (state=TRUE) THEN (220*5)
+        ELSE 0
+        END AS Power
+        FROM actuator_vec
+     ) AS New
+WHERE mote = '2'
+     ORDER BY timestamp ASC) as New2
+WHERE timestamp BETWEEN '2021-05-14 10:58:01' AND '2021-05-14 10:59:60';
 
 ----------MEDIUM QUERY------------ 
 
@@ -110,5 +123,18 @@ order by Cell ASC
 
 _______ENERGY DATA_________
 
+SET search_path TO gman_a35,public;
+SELECT mote AS cell, SUM (energy)*0.1544 AS cost FROM (
+SELECT timestamp, (Power*10^(-3)*5.555*10^(-7)) AS Energy, mote, name_act FROM
 
+     (
+     SELECT date AS timestamp, RIGHT(name_act,1) AS mote, name_act, state,
+        CASE WHEN (state=TRUE) THEN (220*5)
+        ELSE 0
+        END AS Power
+        FROM actuator_vec
+     ) AS New
+WHERE timestamp BETWEEN '2021-05-14 10:57:05' AND '2021-05-14 10:59:59'
+     ) as New2
+GROUP BY mote ORDER BY mote ASC;
 
