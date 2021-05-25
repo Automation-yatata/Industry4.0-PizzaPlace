@@ -118,7 +118,7 @@ _______CONTROL RULE DATA_________
     from (select rule.rule_id, rule.name, actuator.section_id from rule, actuator where rule.name = actuator.name) as tm, section
     where tm.section_id = section.section_id
     group by section.section_id, tm.section_id
-    order by Cell ASC
+    order by room ASC
 
 
 _______ENERGY DATA_________
