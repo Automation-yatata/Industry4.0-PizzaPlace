@@ -52,12 +52,12 @@ _______CONFIGURATION DATA_________
 
 _______CONTROL RULE DATA_________
 
-SET search_path TO gman_a35, public;
-UPDATE subrule
-SET ref = 20
-from rule, actuator, op_r_subr
-where rule.name = actuator.name AND op_r_subr.subrule_id = subrule.subrule_id AND op_r_subr.rule_id = rule.rule_id AND rule.rule_id = 0
-returning rule.rule_id as Rule, actuator.section_id as Cell, subrule.ref as ReferenceValue, subrule.sensor_name
+    SET search_path TO gman_a35, public;
+    UPDATE subrule
+    SET ref = 20
+    from rule, actuator, op_r_subr
+    where rule.name = actuator.name AND op_r_subr.subrule_id = subrule.subrule_id AND op_r_subr.rule_id = rule.rule_id AND rule.rule_id = 0
+    returning rule.rule_id as Rule, actuator.section_id as Cell, subrule.ref as ReferenceValue, subrule.sensor_name
 
 
 _______ENERGY DATA_________
@@ -113,28 +113,28 @@ _______CONFIGURATION DATA_________
 
 _______CONTROL RULE DATA_________
 
-SET search_path TO gman_a35, public;
-select section.section_id as Cell, count(tm.section_id) as Rules
-from (select rule.rule_id, rule.name, actuator.section_id from rule, actuator where rule.name = actuator.name) as tm, section
-where tm.section_id = section.section_id
-group by section.section_id, tm.section_id
-order by Cell ASC
+    SET search_path TO gman_a35, public;
+    select section.section_id as Cell, count(tm.section_id) as Rules
+    from (select rule.rule_id, rule.name, actuator.section_id from rule, actuator where rule.name = actuator.name) as tm, section
+    where tm.section_id = section.section_id
+    group by section.section_id, tm.section_id
+    order by Cell ASC
 
 
 _______ENERGY DATA_________
 
-SET search_path TO gman_a35,public;
-SELECT mote AS cell, SUM (energy)*0.1544 AS cost FROM (
-SELECT timestamp, (Power*10^(-3)*5.555*10^(-7)) AS Energy, mote, name_act FROM
+    SET search_path TO gman_a35,public;
+    SELECT mote AS cell, SUM (energy)*0.1544 AS cost FROM (
+    SELECT timestamp, (Power*10^(-3)*5.555*10^(-7)) AS Energy, mote, name_act FROM
 
-     (
-     SELECT date AS timestamp, RIGHT(name_act,1) AS mote, name_act, state,
-        CASE WHEN (state=TRUE) THEN (220*5)
-        ELSE 0
-        END AS Power
-        FROM actuator_vec
-     ) AS New
-WHERE timestamp BETWEEN '2021-05-14 10:57:05' AND '2021-05-14 10:59:59'
-     ) as New2
-GROUP BY mote ORDER BY mote ASC;
+         (
+         SELECT date AS timestamp, RIGHT(name_act,1) AS mote, name_act, state,
+            CASE WHEN (state=TRUE) THEN (220*5)
+            ELSE 0
+            END AS Power
+            FROM actuator_vec
+         ) AS New
+    WHERE timestamp BETWEEN '2021-05-14 10:57:05' AND '2021-05-14 10:59:59'
+         ) as New2
+    GROUP BY mote ORDER BY mote ASC;
 
