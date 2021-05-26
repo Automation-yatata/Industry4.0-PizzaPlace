@@ -5,7 +5,7 @@ _______SENSOR DATA_________
     SET search_path TO gman_a35, public;
     SELECT alias.value AS measurement, alias.date AS timestamp 
     FROM (SELECT sv.name_sens, sv.value, sv.date FROM sensor_vec AS sv, sensor AS s WHERE s.mote_id=1 AND sv.name_sens='TEMP1') AS alias 
-    WHERE alias.date BETWEEN '2021-05-26 9:00:00' AND '2021-05-26 10:00:00'
+    WHERE alias.date BETWEEN '2021-05-26 9:00:00' AND '2021-05-27 10:00:00'
 
 _______ACTUATOR DATA_________
 
@@ -65,7 +65,7 @@ _______ENERGY DATA_________
     SET search_path TO gman_a35,public;
     SELECT date as timestamp, ((value+10)*220*10^(-3)*4/3600) AS energy
     FROM sensor_vec 
-    WHERE date BETWEEN '2021-05-26 9:00:00' AND '2021-05-26 10:00:00' AND sensor_vec.name_sens='CURR1'
+    WHERE date BETWEEN '2021-05-26 9:00:00' AND '2021-05-27 10:00:00' AND sensor_vec.name_sens='TEMP1'
     ORDER BY date ASC
 
 SELECT timestamp, energy FROM (
@@ -80,7 +80,7 @@ SELECT timestamp, (Power*10^(-3)*5.555*10^(-7)) AS Energy, mote, name_act FROM
      ) AS New
 WHERE mote = '2'
      ORDER BY timestamp ASC) as New2
-WHERE timestamp BETWEEN '2021-05-26 10:00:00' AND '2021-05-26 10:58:59';
+WHERE timestamp BETWEEN '2021-05-26 9:00:00' AND '2021-05-27 10:00:00';
 
 ----------MEDIUM QUERY------------ 
 
@@ -99,7 +99,7 @@ _______ACTUATOR DATA_________
     SET search_path TO gman_a35, public;
     select CONCAT('SECTION', actuator.section_id) AS room, count(name_act)-1 AS change
     from actuator_vec, actuator
-    where actuator_vec.date between '2021-05-26 9:00:00' AND '2021-05-26 10:00:00' AND actuator_vec.name_act = actuator.name AND  
+    where actuator_vec.date between '2021-05-26 9:00:00' AND '2021-05-27 10:00:00' AND actuator_vec.name_act = actuator.name AND  
           ( SUBSTRING(actuator.name,1,length(actuator.name)-9) = 'HEAT' OR SUBSTRING(actuator.name,1,length(actuator.name)-9) = 'FORNO' )
     group by name_act, actuator.section_id
     ORDER BY actuator.section_id ASC
@@ -131,7 +131,7 @@ _______ENERGY DATA_________
     SET search_path TO gman_a35,public;
     SELECT CONCAT('SECTION',name_sens) AS room , SUM((10+5)*220*10^(-3)*4/3600) AS cost
     FROM sensor_vec 
-    WHERE date BETWEEN '2021-05-26 9:00:00' AND '2021-05-26 10:00:00' AND (sensor_vec.name_sens='TEMP1' OR sensor_vec.name_sens='TEMP2')
+    WHERE date BETWEEN '2021-05-26 9:00:00' AND '2021-05-27 10:00:00' AND (sensor_vec.name_sens='TEMP1' OR sensor_vec.name_sens='TEMP2')
     GROUP BY sensor_vec.name_sens
 
     
@@ -145,7 +145,7 @@ _______ENERGY DATA_________
             END AS Power
             FROM actuator_vec
          ) AS New
-    WHERE timestamp BETWEEN '2021-05-26 9:00:00' AND '2021-05-26 10:00:00'
+    WHERE timestamp BETWEEN '2021-05-26 9:00:00' AND '2021-05-27 10:00:00'
          ) as New2
     GROUP BY mote ORDER BY mote ASC;
 
