@@ -96,7 +96,7 @@ _______CONTROL RULE DATA_________
 _______ENERGY DATA_________
 
     SET search_path TO gman_a35,public;
-    SELECT CONCAT('SECTION',name_sens) AS room , SUM((10+value)*220*10^(-3)*4/3600) AS cost
+    SELECT CONCAT('SECTION',name_sens) AS room , SUM((10+value)*220*0.1545*10^(-3)*4/3600) AS cost
     FROM sensor_vec 
     WHERE date BETWEEN '2021-05-26 9:00:00' AND '2021-05-27 10:00:00' AND (sensor_vec.name_sens='TEMP1' OR sensor_vec.name_sens='TEMP2')
     GROUP BY sensor_vec.name_sens
