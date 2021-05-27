@@ -68,19 +68,6 @@ _______ENERGY DATA_________
     WHERE date BETWEEN '2021-05-26 9:00:00' AND '2021-05-27 10:00:00' AND sensor_vec.name_sens='TEMP1'
     ORDER BY date ASC
 
-SELECT timestamp, energy FROM (
-SELECT timestamp, (Power*10^(-3)*5.555*10^(-7)) AS Energy, mote, name_act FROM
-
-     (
-     SELECT date AS timestamp, RIGHT(name_act,1) AS mote, name_act, state,
-        CASE WHEN (state=TRUE) THEN (220*5)
-        ELSE 0
-        END AS Power
-        FROM actuator_vec
-     ) AS New
-WHERE mote = '2'
-     ORDER BY timestamp ASC) as New2
-WHERE timestamp BETWEEN '2021-05-26 9:00:00' AND '2021-05-27 10:00:00';
 
 ----------MEDIUM QUERY------------ 
 
@@ -135,17 +122,4 @@ _______ENERGY DATA_________
     GROUP BY sensor_vec.name_sens
 
     
-    SELECT CONCAT('SECTION',mote) AS room, SUM (energy)*0.1544 AS cost FROM (
-    SELECT timestamp, (Power*10^(-3)*5.555*10^(-7)) AS Energy, mote, name_act FROM
-
-         (
-         SELECT date AS timestamp, RIGHT(name_act,1) AS mote, name_act, state,
-            CASE WHEN (state=TRUE) THEN (220*5)
-            ELSE 0
-            END AS Power
-            FROM actuator_vec
-         ) AS New
-    WHERE timestamp BETWEEN '2021-05-26 9:00:00' AND '2021-05-27 10:00:00'
-         ) as New2
-    GROUP BY mote ORDER BY mote ASC;
-
+    
