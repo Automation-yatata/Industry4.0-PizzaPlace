@@ -29,26 +29,6 @@ _______CONFIGURATION DATA_________
       ORDER BY section.section_id DESC) AS t1
     RETURNING mote.mote_id AS Sensor,mote.section_id AS Cell
     
-//////////////////// TESTES
-    SET search_path TO gman_a35, public;
-    UPDATE mote
-    SET section_id=t1.section_id
-    FROM(SELECT section.section_id FROM section
-          ORDER BY section.section_id DESC) AS t1
-    WHERE mote.section_id!=t1.section_id
-    RETURNING mote.mote_id,mote.section_id
-    
-    SET search_path TO gman_a35, public;
-    UPDATE mote
-    SET section_id = CASE 
-                 WHEN mote.section_id!=t1.section_id THEN t1.section_id
-                 WHEN mote.section_id=t1.section_id THEN t1.section_id
-                 END
-    FROM (SELECT section.section_id FROM section
-      ORDER BY section.section_id DESC) AS t1
-    RETURNING mote.mote_id,mote.section_id
-///////////////////
-
 
 _______CONTROL RULE DATA_________
 
